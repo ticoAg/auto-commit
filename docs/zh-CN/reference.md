@@ -65,7 +65,7 @@ claude-auto-commit --dry-run --save-template hotfix
 
 ## 配置文件
 
-- 存放路径：`~/.claude-auto-commit/config.json`
+- 存放路径：`~/.claude-auto-commit/config.yml`（仅 YAML）
 - 模板目录：`~/.claude-auto-commit/templates/`
 - 示例配置（中文团队推荐）：
 

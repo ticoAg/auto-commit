@@ -142,7 +142,7 @@ v0.1.0 includes performance optimizations:
 ## Configuration
 
 ### Where is the config file?
-Default location: `~/.claude-auto-commit/config.json` (changed to JSON in v0.1.0)
+Default location: `~/.claude-auto-commit/config.yml` (YAML only)
 
 ### How to change default language?
 Edit config file:
@@ -186,12 +186,10 @@ claude-auto-commit --help  # Shows version in help text
 rm -rf ~/.claude-auto-commit
 ```
 
-### Migration from v0.0.5
-If upgrading from CLI version:
-1. Install new SDK version
-2. Set ANTHROPIC_API_KEY environment variable
-3. Old config.yml will be ignored (JSON format now)
-4. Templates need to be recreated
+### Migration notes
+If upgrading from older versions that used JSON config:
+1. Convert your `config.json` to YAML and save as `~/.claude-auto-commit/config.yml`
+2. Remove the old JSON file to avoid confusion
 
 ## Contributing
 

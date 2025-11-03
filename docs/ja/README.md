@@ -64,11 +64,11 @@ claude-auto-commit --template hotfix
 
 ## ⚙️ 設定（YAML 推奨）
 
-`~/.claude-auto-commit/config.yml` を作成または編集（YAML を優先。JSON も互換対応）：
+`~/.claude-auto-commit/config.yml` を作成または編集（YAML のみ対応）：
 
 ```yaml
 # Claude Auto Commit 設定（YAML）
-# config.yml と config.json が両方ある場合、YAML を優先します。
+# JSON はサポートしません。
 language: ja               # en/ja/zh
 useEmoji: false            # 絵文字を使用するか
 conventionalCommit: false  # Conventional Commits 形式を使用するか
@@ -76,7 +76,7 @@ verbose: false             # 詳細出力
 ```
 
 補足:
-- YAML を推奨。JSON も後方互換として対応（移行ヒントを表示）。
+- YAML のみ。実行時のコマンドライン引数は設定値を上書きします。
 - 実行時のコマンドライン引数は設定値を上書きします。
 
 ## 📖 オプション（SDK）

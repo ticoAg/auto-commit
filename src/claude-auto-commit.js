@@ -80,17 +80,12 @@ class ClaudeAutoCommit {
 				}
 				return this._configCache;
 			}
-			// 配置查找顺序：YAML 优先（~/.claude-auto-commit/config.yml），其次 JSON（config.json）
+			// 配置查找：仅支持 YAML（~/.claude-auto-commit/config.yml）
 			const configDir = path.join(os.homedir(), ".claude-auto-commit");
 			const yamlPath = path.join(configDir, "config.yml");
-			const jsonPath = path.join(configDir, "config.json");
 
 			const yamlExists = await fs
 				.access(yamlPath)
-				.then(() => true)
-				.catch(() => false);
-			const jsonExists = await fs
-				.access(jsonPath)
 				.then(() => true)
 				.catch(() => false);
 
@@ -104,33 +99,10 @@ class ClaudeAutoCommit {
 					config = YAML.parse(content) || {};
 					source = yamlPath;
 				} catch (e) {
-					console.log(
-						`⚠️  无法解析 YAML 配置（${yamlPath}）：${e.message}，将回退到 JSON/默认配置。`
-					);
+					console.log(`⚠️  无法解析 YAML 配置（${yamlPath}）：${e.message}，将使用默认配置。`);
 				}
 			}
 
-			if (!config && jsonExists) {
-				// 读取 JSON 配置（兼容）
-				try {
-					const content = await fs.readFile(jsonPath, "utf8");
-					config = JSON.parse(content);
-					source = jsonPath;
-					console.log(
-						"⚠️  检测到 JSON 配置文件，已兼容加载。后续建议迁移至 ~/.claude-auto-commit/config.yml（YAML 优先）。"
-					);
-				} catch (e) {
-					console.log(
-						`⚠️  无法解析 JSON 配置（${jsonPath}）：${e.message}，将使用默认配置。`
-					);
-				}
-			}
-
-			if (yamlExists && jsonExists && this.verbose) {
-				console.log(
-					"ℹ️  同时检测到 YAML 与 JSON 配置：将优先使用 YAML，并忽略 JSON。"
-				);
-			}
 
 			if (config) {
 				// 缓存配置
@@ -856,8 +828,7 @@ Examples:
   node src/claude-auto-commit.js --template my-template
 
 Configuration:
-  Preferred: ~/.claude-auto-commit/config.yml (YAML)
-  Compatible: ~/.claude-auto-commit/config.json (JSON, deprecated)
+  Path: ~/.claude-auto-commit/config.yml (YAML only)
   YAML example:
   language: ja
   useEmoji: true

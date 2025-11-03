@@ -37,10 +37,10 @@ sudo ln -sf "$(pwd)/bin/claude-auto-commit" /usr/local/bin/claude-auto-commit
 
 ```bash
 which claude-auto-commit
-claude-auto-commit --help  # 应看到“YAML 优先 / JSON 兼容（deprecated）”提示
+claude-auto-commit --help
 ```
 
-## 配置（YAML 优先）
+## 配置（仅 YAML）
 
 ```yaml
 # ~/.claude-auto-commit/config.yml
@@ -50,7 +50,7 @@ conventionalCommit: false # 是否使用 Conventional Commits 格式
 verbose: true # 是否详细输出
 ```
 
-- 若同时存在 `config.yml` 与 `config.json`，工具将优先使用 YAML，并忽略 JSON；当读取 JSON 时会打印一次迁移提示。
+- 仅支持 YAML 配置文件。
 
 ## 本地 Git 沙箱（可选，用于安全自验推送）
 
@@ -136,7 +136,7 @@ sudo rm -f /usr/local/bin/claude-auto-commit  # 系统级
 
 - 未登录 Claude 或离线？使用“模板流”即可全链路验证（自动暂存 → 提交 → 推送）。
 - 未看到命令？确认 PATH 包含 `~/.local/bin` 或 `/usr/local/bin`，并重新打开终端。
-- YAML 与 JSON 同时存在？日志会提示“优先使用 YAML”；如需测试 JSON 路径，临时改名 `config.yml` 后再运行。
+- 不再支持 JSON 配置；如需迁移，请将历史 JSON 内容转换为 YAML 并保存为 `config.yml`。
 
 ---
 

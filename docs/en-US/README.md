@@ -64,11 +64,11 @@ claude-auto-commit --template hotfix
 
 ## ⚙️ Configuration (YAML preferred)
 
-Create or edit `~/.claude-auto-commit/config.yml` (YAML is preferred; JSON is still compatible):
+Create or edit `~/.claude-auto-commit/config.yml` (YAML only):
 
 ```yaml
 # Claude Auto Commit config (YAML)
-# If both config.yml and config.json exist, YAML takes precedence.
+# YAML only; no JSON fallback.
 language: en               # en/ja/zh
 useEmoji: false            # whether to use emojis
 conventionalCommit: false  # use Conventional Commits format
@@ -76,7 +76,7 @@ verbose: false             # verbose output
 ```
 
 Notes:
-- YAML is recommended. JSON is still supported for backward compatibility and will trigger a migration hint.
+- YAML only. Command-line flags override config values at runtime.
 - Command-line flags override config values at runtime.
 
 ## 📖 CLI Options (SDK)

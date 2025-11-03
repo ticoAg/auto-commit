@@ -13,7 +13,7 @@ This document explains how `claude-auto-commit` works at a high level. The Chine
 - Entry: `bin/claude-auto-commit` → `src/claude-auto-commit.js` (`main()`)
 - Class: `ClaudeAutoCommit`
 - Subsystems:
-  - Config loader (YAML preferred, JSON compatible, 5‑min cache)
+- Config loader (YAML only, 5‑min cache)
   - Git change collector (parallel commands, cached results, truncation)
   - Prompt builder (language/format/emoji/type aware)
   - Generation via Claude Code SDK (30s timeout, up to 3 retries, backoff)
@@ -31,4 +31,3 @@ This document explains how `claude-auto-commit` works at a high level. The Chine
 ## Differences from legacy CLI
 - SDK-only implementation; no auto-update.
 - Better reliability and logs (timeouts, retries, `trace_id`).
-

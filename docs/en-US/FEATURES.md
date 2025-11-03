@@ -189,16 +189,14 @@ claude-auto-commit --list-templates
 ```
 
 ### ⚙️ Configuration File Support
-JSON-based configuration with caching:
+YAML-based configuration with caching:
 
-```bash
-# Configuration saved in ~/.claude-auto-commit/config.json
-{
-  "language": "ja",
-  "useEmoji": true,
-  "conventionalCommit": true,
-  "verbose": false
-}
+```yaml
+# Configuration saved in ~/.claude-auto-commit/config.yml
+language: ja
+useEmoji: true
+conventionalCommit: true
+verbose: false
 ```
 
 ### 🚀 Auto-Push Support
@@ -208,8 +206,7 @@ Optional automatic push to remote repository:
 # Enable auto-push for this commit
 claude-auto-commit --push
 
-# Enable auto-push in configuration
-# "autoPush": true in config.json
+# Enable auto-push in configuration (YAML)
 ```
 
 ### 📊 Verbose Logging & Performance Metrics

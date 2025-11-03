@@ -41,6 +41,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 🔗 README 语言入口更新为 `zh-CN` / `en-US`；本地自验链接指向中文路径。
 - 🧹 清理：删除废弃 `src/claude-auto-commit.sh` 与顶层 `CLAUDE.md`（内容已迁移至文档）。
 
+### 兼容性变更
+
+- ⛔ 配置不再支持 JSON：移除 `~/.claude-auto-commit/config.json` 兼容读取，仅保留 `config.yml`（YAML）。如仍在使用 JSON，请将其内容迁移为 YAML 并保存为 `~/.claude-auto-commit/config.yml`。
+
 ## [0.1.5] - 2025-11-03
 
 ### 新增

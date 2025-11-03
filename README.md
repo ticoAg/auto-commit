@@ -185,11 +185,10 @@ npx claude-auto-commit@latest
 
 ## ⚙️ 配置（YAML，SDK 版）
 
-优先读取 `~/.claude-auto-commit/config.yml`，若不存在将兼容 `config.json`。
+配置文件路径为 `~/.claude-auto-commit/config.yml`（仅 YAML）。
 
 ```yaml
 # Claude Auto Commit 配置（YAML）
-# 如同时存在 config.yml 与 config.json，将优先读取 YAML。
 language: en               # en/ja/zh
 useEmoji: false            # 是否在提交消息中使用表情
 conventionalCommit: false  # 是否使用 Conventional Commits 格式
