@@ -4,66 +4,51 @@
 
 ![Claude Auto-Commit Hero](./docs/images/hero-banner.png)
 
-🤖 **AI-powered Git commit message generator using Claude Code SDK**
+🤖 **使用Claude Code SDK的AI驱动Git提交消息生成器**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub release](https://img.shields.io/github/release/ticoAg/claude-auto-commit.svg)](https://github.com/ticoAg/claude-auto-commit/releases)
 [![GitHub stars](https://img.shields.io/github/stars/ticoAg/claude-auto-commit.svg)](https://github.com/ticoAg/claude-auto-commit/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/ticoAg/claude-auto-commit.svg)](https://github.com/ticoAg/claude-auto-commit/network)
-[![GitHub issues](https://img.shields.io/github/issues/ticoAg/claude-auto-commit.svg)](https://github.com/ticoAg/claude-auto-commit/issues)
 [![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Linux-blue.svg)](https://github.com/ticoAg/claude-auto-commit)
 [![Node.js](https://img.shields.io/badge/Node.js-22%2B-green.svg)](https://nodejs.org)
 [![Claude Code SDK](https://img.shields.io/badge/Powered%20by-Claude%20Code%20SDK-orange.svg)](https://docs.anthropic.com/en/docs/claude-code)
 
 </div>
 
-> 本仓库由 ticoAg 维护，所有安装脚本均指向 `https://github.com/ticoAg/claude-auto-commit`。
+**语言**: [English](./docs/en/README.md) | [日本語](./docs/ja/README.md)
 
-Claude Auto-Commit is an open-source tool that automatically generates intelligent Git commit messages by analyzing your code changes using Claude Code SDK. It integrates seamlessly into your development workflow with enhanced performance, reliability, and modern JavaScript architecture.
+Claude Auto-Commit是一个开源命令行工具，将AI驱动的提交消息生成集成到您的Git工作流程中。通过分析您的代码更改，使用Claude Code SDK创建高性能、可靠且有意义且符合上下文的提交消息。
 
-## 🌟 Transform Your Commit History
+## 🌟 转变您的提交历史
 
 <div align="center">
 
 ![Before and After Comparison](./docs/images/demo-before-after-english.png)
 
-_Say goodbye to vague commit messages. Let Claude AI write meaningful commits that tell the story of your code._
+*告别模糊的提交消息。让Claude AI编写有意义的提交，讲述您代码的故事。*
 
 </div>
 
-⚠️ **Important Notes**:
+## 🚀 快速开始
 
-- **Requires Claude Pro/Max subscription** and Claude CLI authentication
-- **No API key needed** - uses Claude Code SDK with OAuth authentication
-- Run `claude login` first if not already authenticated
-- By default, this tool will automatically stage all changes and commit
-- Use `--push` flag to enable auto-push to remote repository
-- Use `--dry-run` flag to preview commit messages without committing
+### 安装选项
 
-## 🚀 快速上手
-
-### 安装方式
-
-**方式一：脚本安装（本仓库，推荐）**
-
+**方法1：一键安装（本仓库，推荐）**
 ```bash
 curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/install.sh | bash
 ```
 
-**方式二：一次性脚本执行（本仓库）**
-
+**方法2：一次性执行（本仓库）**
 ```bash
 curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/run-once.sh | bash
 ```
 
-**方式三：NPX 临时执行（备用）**
-
+**方法3：NPX（备用）**
 ```bash
 npx claude-auto-commit
 ```
 
-**方式四：通过 NPM 全局安装（备用）**
-
+**方法4：NPM 全局安装（备用）**
 ```bash
 npm install -g claude-auto-commit
 ```
@@ -71,243 +56,166 @@ npm install -g claude-auto-commit
 ### 基本用法
 
 ```bash
-# 分析变更并生成提交信息
-npx claude-auto-commit
-
-# 日语 + 表情 + Conventional Commits
-npx claude-auto-commit -l ja -e -c
-
-# 自定义提交类型并自动推送
-npx claude-auto-commit -t feat --push
-```
-
-### 认证配置
-
-Claude Auto-Commit 依赖 Claude Code SDK，需 **Claude Pro 或 Max 订阅**：
-
-```bash
-# 首次使用：登录 Claude CLI
-claude login
-
-# 选择“2. Claude app（需要 Max 订阅）”
-# 浏览器会打开 OAuth 页面，无需手动配置 API key
-```
-
-完成登录后凭据会保存，claude-auto-commit 可直接使用。
-
-## ✨ Features
-
-- 🧠 **AI Analysis**: Leverages Claude Code SDK for intelligent code change understanding
-- 🌍 **Multi-language**: Interface available in English and Japanese
-- 📝 **Conventional Commits**: Optional support for conventional commit format
-- 😊 **Emoji Support**: Add contextual emojis to commit messages
-- 🔍 **Dry Run Mode**: Preview commit messages without making actual commits
-- 📝 **Template System**: Save and reuse common commit message patterns
-- ⚙️ **Configuration**: JSON-based configuration file support
-- 🔄 **Retry Mechanism**: Enhanced error handling with exponential backoff
-- ⚡ **Performance**: Parallel processing and intelligent caching
-- 🚀 **Auto-push**: Optional automatic push to remote repository
-- 📊 **Verbose Logging**: Detailed execution metrics and statistics
-- 🛠️ **Configurable**: Extensive customization through CLI options and config files
-- 📦 **Modern Architecture**: Node.js ES modules with TypeScript support
-
-## 📖 Documentation
-
-- [English Documentation](./docs/en/README.md)
-- [日本語ドキュメント](./docs/ja/README.md)
-- [中文文档](./docs/zh/README.md)
-
-Complete documentation available in this repository.
-
-## 📋 Requirements
-
-### System Requirements
-
-- **Node.js 22.0.0 or later**
-- **Git repository**
-- **ANTHROPIC_API_KEY environment variable**
-
-### Claude API Access
-
-You need a Claude account with API access:
-
-- **Claude Pro** ($20/month) - Small repositories
-- **Claude Max** ($100/month) - Regular development
-- **Claude Max** ($200/month) - Large projects/teams
-
-Set your API key:
-
-```bash
-export ANTHROPIC_API_KEY="your-api-key"
-```
-
-### Auto-Installation Dependencies
-
-The tool automatically installs:
-
-- Claude Code SDK (`@anthropic-ai/claude-code`)
-- Required Node.js dependencies
-
-## 🎯 Examples
-
-<div align="center">
-
-![Terminal Demo](./docs/images/demo-english-terminal.png)
-
-_See Claude Auto-Commit in action with the `--summary` flag for detailed change analysis_
-
-</div>
-
-### Basic Usage
-
-```bash
-# Simple commit with auto-generated message (will auto-stage, commit, and push)
+# 分析更改并生成提交消息
 claude-auto-commit
 
-# Commit without auto-push (recommended for beginners)
-claude-auto-commit -n
+# 中文界面，表情符号和常规提交格式
+claude-auto-commit -l ja -e -c
 
-# Skip push confirmation prompt
-claude-auto-commit -y
+# 自定义提交类型并自动推送
+claude-auto-commit -t feat --push
+# 生成提交消息并推送
+claude-auto-commit
 
-# Generate message without committing (dry-run)
-claude-auto-commit --dry-run
-
-# Show detailed change summary
-claude-auto-commit --summary
-
-# Manual file selection without auto-push
-claude-auto-commit -s -n
-
-# Custom branch and emoji
-claude-auto-commit -b develop -e
-
-# English with conventional commits
-claude-auto-commit -l en -c -t feat
-
-# Custom message, no push
-claude-auto-commit -m "Custom commit message" -n
+# 使用自定义选项
+claude-auto-commit -l zh -e -t feat
 ```
 
-### Advanced Options
+## ✨ 功能特性
 
+- 🧠 **AI驱动**: 使用Claude CLI生成智能提交消息
+- 🌍 **多语言支持**: 支持中文、英语、日语、阿拉伯语、西班牙语、法语
+- 📝 **约定式提交**: 可选的约定式提交格式
+- 🔄 **自动更新**: 每日自动更新（可配置）
+- 🎯 **智能分析**: 分析代码更改、文件类型和模式
+- ⚡ **快速轻量**: 为日常开发工作流程优化
+- 🛠️ **高度可配置**: 丰富的自定义选项
+
+## 📋 系统要求
+
+- Git仓库
+- 已安装并配置[Claude CLI](https://docs.anthropic.com/claude/cli)
+- Bash shell（macOS、Linux、WSL）
+
+## 🎯 使用示例
+
+### 基本用法
 ```bash
-# Manual staging with verbose output
+# 使用自动生成消息的简单提交
+claude-auto-commit
+
+# 自定义分支和表情符号
+claude-auto-commit -b develop -e
+
+# 中文约定式提交
+claude-auto-commit -l zh -c -t feat
+
+# 自定义消息，不推送
+claude-auto-commit -m "自定义提交消息" -n
+```
+
+### 高级选项
+```bash
+# 手动暂存和详细输出
 claude-auto-commit -s -v
 
-# Custom prefix for hotfix
+# 热修复的自定义前缀
 claude-auto-commit -p "[HOTFIX]" -t fix
 
-# Preview message without committing
-claude-auto-commit --dry-run
-
-# Show detailed change statistics
-claude-auto-commit --summary
-
-# Combine options for detailed preview
-claude-auto-commit --dry-run --summary -v
-
-# Template management
-claude-auto-commit --save-template hotfix "🔥 HOTFIX: {description}"
-claude-auto-commit --template hotfix
-claude-auto-commit --list-templates
-
-# Update tool
+# 更新工具
 claude-auto-commit --update
 ```
 
-## 🔧 安装方法（旧版 Shell CLI）
+## 🔧 安装方法
 
-### 方式一：脚本安装（推荐）
-
+### 方法1: 一键安装（推荐）
 ```bash
 curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/install.sh | bash
 ```
 
-### 方式二：下载发布包
-
+### 方法2: 手动下载
 ```bash
-# 下载最新发布的脚本版本
-curl -L -o claude-auto-commit https://github.com/ticoAg/claude-auto-commit/releases/latest/download/claude-auto-commit.sh
+# 为您的平台下载
+curl -L -o claude-auto-commit https://github.com/ticoAg/claude-auto-commit/releases/latest/download/claude-auto-commit-$(uname -s)-$(uname -m)
 chmod +x claude-auto-commit
 sudo mv claude-auto-commit /usr/local/bin/
 ```
 
-### 方式三：克隆仓库后安装
-
+### 方法3: NPX（Node.js用户，备用）
 ```bash
-git clone https://github.com/ticoAg/claude-auto-commit.git
-cd claude-auto-commit
-chmod +x src/claude-auto-commit.sh
-sudo ln -s $(pwd)/src/claude-auto-commit.sh /usr/local/bin/claude-auto-commit
+npx claude-auto-commit@latest
 ```
 
-### 方式四：直接使用脚本
+## 更新记录
 
-```bash
-# 适用于开发或测试
-git clone https://github.com/ticoAg/claude-auto-commit.git
-cd claude-auto-commit
-./src/claude-auto-commit.sh [options]
-```
+- v0.1.5（2025-11-03）：默认安装切换为本仓库脚本；移除 NPM 徽章；在主仓库 README 新增上游仓库说明；同步 package.json 元数据。
 
-## ⚙️ Configuration
+## ⚙️ 配置
 
-Create `~/.claude-auto-commit/config.yml`:
+创建 `~/.claude-auto-commit/config.yml`:
 
 ```yaml
 auto_update:
-    enabled: true
-    frequency: daily # daily/weekly/manual/always
-    silent: false
+  enabled: true
+  frequency: daily  # daily/weekly/manual/always
+  silent: false
 
 defaults:
-    language: en
-    branch: main
-    emoji: false
-    conventional: false
+  language: zh
+  branch: main
+  emoji: false
+  conventional: false
 
 git:
-    auto_stage: true
-    auto_push: true
+  auto_stage: true
+  auto_push: true
 ```
 
-## 🚀 What's New in v0.1.4
+## 📖 所有选项
 
-- **Claude Code SDK Migration**: Migrated from Claude CLI to modern Claude Code SDK
-    - Enhanced performance with parallel processing and intelligent caching
-    - Exponential backoff retry mechanism for improved reliability
-    - Template system with persistent storage
-    - JSON configuration file support
-- **NPM Package Distribution**: Available via `npx claude-auto-commit`
-- **OAuth Authentication**: No API key required for Claude Pro/Max users
-- **ES Modules Architecture**: Modern JavaScript with Node.js 22+ support
-- **Smart placeholders**: Use `{variable}` in templates for dynamic values
+| 选项 | 说明 | 默认值 |
+|------|------|--------|
+| `-b, --branch <branch>` | 推送目标分支 | `main` |
+| `-l, --language <lang>` | 语言 (zh/en/ja/ar/es/fr) | `en` |
+| `-e, --emoji` | 使用表情符号 | `false` |
+| `-n, --no-push` | 不推送 | `false` |
+| `-s, --no-stage` | 手动暂存 | `false` |
+| `-m, --message <msg>` | 自定义消息 | Claude生成 |
+| `-t, --type <type>` | 提交类型 | 自动 |
+| `-c, --conventional` | 约定式提交 | `false` |
+| `-p, --prefix <prefix>` | 前缀 | 无 |
+| `-v, --verbose` | 详细输出 | `false` |
+| `--update` | 立即更新 | - |
+| `--no-update` | 跳过本次更新 | - |
+| `--version` | 显示版本 | - |
+| `-h, --help` | 显示帮助 | - |
 
-## 🤝 Contributing
+## 🌟 特性详解
 
-Contributions are welcome! Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for details.
+### 智能提交消息生成
+Claude AI分析代码更改并考虑以下因素生成消息：
+- 更改文件的类型
+- 添加、修改、删除的行数
+- 实际代码差异
+- 项目上下文
 
-## 📄 License
+### 多语言支持
+为每种语言的编程社区文化生成适合的消息：
+- **中文**: 技术性强，表达直接
+- **英语**: 简洁标准的表达
+- **日语**: 礼貌详细的说明
 
-This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+### 自动更新系统
+- 每日自动更新检查
+- 无缝后台更新
+- 失败时自动回滚
 
-## 🙏 Acknowledgments
+## 🤝 贡献
 
-## 上游仓库（Upstream）
+欢迎贡献！请参阅[CONTRIBUTING.md](./CONTRIBUTING.md)了解详情。
 
-本项目基于开源项目进行二次维护与扩展，原始仓库为：
+## 📄 许可证
 
-- 0xkaz/claude-auto-commit（上游仓库）：https://github.com/0xkaz/claude-auto-commit
+本项目使用MIT许可证 - 详见[LICENSE](./LICENSE)文件。
 
-我们会持续关注并同步上游的改进，感谢上游作者与社区的贡献。
+## 🙏 致谢
 
-- [Anthropic](https://anthropic.com) for Claude CLI
-- [Conventional Commits](https://conventionalcommits.org) specification
-- Open source community for inspiration
+- [Anthropic](https://anthropic.com) 的Claude CLI
+- [约定式提交](https://conventionalcommits.org) 规范
+- 开源社区的启发
 
 ---
 
-**Made with ❤️ for the developer community**
+**为开发者社区倾情打造 ❤️**
 
-[Report Issues](https://github.com/ticoAg/claude-auto-commit/issues) | [Request Features](https://github.com/ticoAg/claude-auto-commit/issues/new?template=feature_request.md) | [Documentation](https://github.com/ticoAg/claude-auto-commit)
+[报告问题](https://github.com/ticoAg/claude-auto-commit/issues) | [功能请求](https://github.com/ticoAg/claude-auto-commit/issues/new?template=feature_request.md)
