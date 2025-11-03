@@ -1,6 +1,6 @@
 {
   "name": "@ticoag/claude-auto-commit",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "description": "AI-powered Git commit message generator using Claude Code SDK",
   "main": "src/claude-auto-commit.js",
   "bin": {
@@ -59,8 +59,7 @@
   "bugs": {
     "url": "https://github.com/ticoAg/claude-auto-commit/issues"
   },
-  "homepage": "https://github.com/ticoAg/claude-auto-commit#readme"
-  ,
+  "homepage": "https://github.com/ticoAg/claude-auto-commit#readme",
   "publishConfig": {
     "access": "public"
   }
