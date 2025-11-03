@@ -62,12 +62,12 @@ jobs:
         
         **Method 3: Script installation:**
         ```bash
-        curl -fsSL https://raw.githubusercontent.com/0xkaz/claude-auto-commit/main/scripts/install.sh | bash
+        curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/install.sh | bash
         ```
         
         **Method 4: One-time script execution:**
         ```bash
-        curl -fsSL https://raw.githubusercontent.com/0xkaz/claude-auto-commit/main/scripts/run-once.sh | bash
+        curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/run-once.sh | bash
         ```
         
         ### 📋 Requirements
@@ -84,7 +84,7 @@ jobs:
         - Updated installation process
         
         ### 🌐 Documentation
-        Visit [claude-auto-commit.0xkaz.com](https://claude-auto-commit.0xkaz.com) for complete documentation.
+        Visit [github.com/ticoAg/claude-auto-commit](https://github.com/ticoAg/claude-auto-commit) for complete documentation.
         EOF
         
     - name: Publish to NPM

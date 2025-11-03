@@ -60,7 +60,7 @@ No, Claude Code SDK uses OAuth authentication, not API keys. Use `claude login` 
    npm install -g claude-auto-commit
    
    # Method 2: One-time execution
-   curl -fsSL https://raw.githubusercontent.com/0xkaz/claude-auto-commit/main/scripts/run-once.sh | bash
+   curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/run-once.sh | bash
    ```
 
 ### Node.js version issues
@@ -203,10 +203,10 @@ If upgrading from CLI version:
 - Add translations
 
 ### Where to report bugs?
-https://github.com/0xkaz/claude-auto-commit/issues
+https://github.com/ticoAg/claude-auto-commit/issues
 
 ## Need More Help?
 
-- Documentation: https://claude-auto-commit.0xkaz.com
-- GitHub: https://github.com/0xkaz/claude-auto-commit
-- Issues: https://github.com/0xkaz/claude-auto-commit/issues
+- Documentation: https://github.com/ticoAg/claude-auto-commit
+- GitHub: https://github.com/ticoAg/claude-auto-commit
+- Issues: https://github.com/ticoAg/claude-auto-commit/issues

@@ -1,6 +1,6 @@
 {
   "name": "claude-auto-commit",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "AI-powered Git commit message generator using Claude Code SDK",
   "main": "src/claude-auto-commit.js",
   "bin": {
@@ -29,7 +29,8 @@
   "author": "rakd",
   "license": "MIT",
   "dependencies": {
-    "@anthropic-ai/claude-code": "^1.0.22"
+    "@anthropic-ai/claude-code": "^1.0.22",
+    "yaml": "^2.4.5"
   },
   "devDependencies": {
     "@types/node": "^20.0.0"

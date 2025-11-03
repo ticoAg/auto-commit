@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### 变更
+
+## [0.1.6] - 2025-11-03
+
+### 新增
+
+- 🧩 CLI 入口“干净方案”：核心脚本 `src/claude-auto-commit.js` 导出 `main()`，由 `bin/claude-auto-commit` 直接调用，避免依赖“是否直接执行”的判断，解决全局命令静默无输出问题。
+- 📡 任务日志增强：`--verbose` 模式下实时输出 Claude Code 的流式消息（system/assistant/result 关键信息，带截断防刷屏），便于定位如登录/API Key 等问题。
+- 🔎 启动预检：仅检测是否能通过 `claude` 命令启动（`claude --version`），不再检查其他安装来源；若不可用，输出中文指引。
+- ⚙️ 配置扩展：支持在 `~/.claude-auto-commit/config.yml` 指定 `claudePath`，用于强制绑定到你已登录的 `claude` 可执行路径（优先于 PATH 探测）。
+- 🖊️ 提交信息标识：默认在提交信息末尾追加一行 `自动生成 by claude-auto-commit`；可通过配置项 `appendSignature: false` 关闭。
+
+### 修复
+
+- 🛠️ 修复 `claude-auto-commit --dry-run -v` 在部分环境下无日志的问题（bin 入口改为调用导出的 `main()`）。
+
+### 兼容性
+
+- ⬅️ 保留直接执行 `node src/claude-auto-commit.js` 的兼容逻辑，仍可用于本地调试。
+
+- 📚 文档对齐为 SDK 版：移除旧 CLI 选项与说明，统一为 SDK 可用参数集（en/ja/zh 同步）。
+- 🧰 配置改为 YAML 优先：新增 `~/.claude-auto-commit/config.yml` 示例；仍兼容 `config.json`（显示迁移提示）。
+- 🛠️ 安装脚本更新：`install.sh` 默认生成 YAML 配置；若检测到 JSON，打印迁移提示且保留原文件。
+- 💬 CLI/帮助文案更新：`bin/claude-auto-commit` 与 `--help` 输出增加“YAML 优先 / JSON 兼容（deprecated）”说明。
+- 🧪 内部提示：在读取 JSON 配置时输出一次性中文警告，并记录配置来源（verbose 时显示）。
+- 🗂️ 新增文档：`docs/local-validation.md` 提供“方案 2：手动克隆 + 软链”的本地开发自验流程（含本地裸仓库推送验证）。
+
 ## [0.1.5] - 2025-11-03
 
 ### 新增

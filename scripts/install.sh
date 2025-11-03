@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Claude Auto Commit SDK v0.1.0 - One-line Installer
-# Usage: curl -fsSL https://raw.githubusercontent.com/0xkaz/claude-auto-commit/main/scripts/install.sh | bash
+# Claude Auto Commit SDK v0.1.0 - 一键安装脚本
+# 用法：curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/install.sh | bash
 
 set -e
 
@@ -36,7 +36,7 @@ remove_old_version() {
         "/opt/homebrew/bin/claude-auto-commit"
         "$HOME/bin/claude-auto-commit"
     )
-    
+
     for location in "${old_locations[@]}"; do
         if [[ -f "$location" ]]; then
             # Check if it's the old CLI version
@@ -54,7 +54,7 @@ remove_old_version() {
 # Function to detect shell and update profile
 update_shell_profile() {
     local shell_profile=""
-    
+
     if [[ "$SHELL" == *"zsh"* ]]; then
         shell_profile="$HOME/.zshrc"
     elif [[ "$SHELL" == *"bash"* ]]; then
@@ -66,56 +66,56 @@ update_shell_profile() {
     elif [[ "$SHELL" == *"fish"* ]]; then
         shell_profile="$HOME/.config/fish/config.fish"
     fi
-    
+
     if [[ -n "$shell_profile" ]] && [[ -f "$shell_profile" ]]; then
         # Check if PATH already contains the bin directory
         if ! grep -q "$BIN_DIR" "$shell_profile"; then
             echo "" >> "$shell_profile"
-            echo "# Claude Auto Commit SDK" >> "$shell_profile"
+            echo "# Claude Auto Commit SDK 安装路径" >> "$shell_profile"
             if [[ "$SHELL" == *"fish"* ]]; then
                 echo "set -gx PATH $BIN_DIR \$PATH" >> "$shell_profile"
             else
                 echo "export PATH=\"$BIN_DIR:\$PATH\"" >> "$shell_profile"
             fi
-            print_message "$GREEN" "✅ Updated $shell_profile with PATH"
+            print_message "$GREEN" "✅ 已在 $shell_profile 中追加 PATH 配置"
         fi
     fi
 }
 
 # Banner
 echo ""
-print_message "$BLUE" "🚀 Claude Auto Commit SDK v0.1.1 Installer"
+print_message "$BLUE" "🚀 Claude Auto Commit SDK v0.1.1 安装程序"
 print_message "$BLUE" "=========================================="
 echo ""
 
 # Check prerequisites
-print_message "$YELLOW" "📋 Checking prerequisites..."
+print_message "$YELLOW" "📋 正在检查依赖..."
 
 # Check Node.js
 if ! command_exists node; then
-    print_message "$RED" "❌ Node.js is not installed. Please install Node.js 22.0.0 or later."
-    echo "   Visit: https://nodejs.org/"
+    print_message "$RED" "❌ 未检测到 Node.js，请先安装 22.0.0 及以上版本。"
+    echo "   访问：https://nodejs.org/"
     exit 1
 fi
 
 NODE_VERSION=$(node -v | cut -d'v' -f2)
 NODE_MAJOR=$(echo $NODE_VERSION | cut -d'.' -f1)
 if [ "$NODE_MAJOR" -lt 22 ]; then
-    print_message "$RED" "❌ Node.js version 22.0.0 or later is required. Current version: $NODE_VERSION"
+    print_message "$RED" "❌ 需要 Node.js 22.0.0 及以上版本，当前版本为：$NODE_VERSION"
     exit 1
 fi
-print_message "$GREEN" "✅ Node.js $(node -v) found"
+print_message "$GREEN" "✅ 已检测到 Node.js $(node -v)"
 
 # Check npm
 if ! command_exists npm; then
-    print_message "$RED" "❌ npm is not installed. Please install npm."
+    print_message "$RED" "❌ 未检测到 npm，请先安装 npm。"
     exit 1
 fi
-print_message "$GREEN" "✅ npm $(npm -v) found"
+print_message "$GREEN" "✅ 已检测到 npm $(npm -v)"
 
 # Check git
 if ! command_exists git; then
-    print_message "$RED" "❌ Git is not installed. Please install git."
+    print_message "$RED" "❌ 未检测到 Git，请先安装 Git。"
     exit 1
 fi
 print_message "$GREEN" "✅ Git $(git --version | cut -d' ' -f3) found"
@@ -152,17 +152,17 @@ if ! claude -p "test" >/dev/null 2>&1; then
 fi
 
 # Remove old CLI versions
-print_message "$YELLOW" "🧹 Checking for old CLI versions..."
+print_message "$YELLOW" "🧹 正在检查旧版 CLI..."
 remove_old_version
 
 # Create necessary directories
-print_message "$YELLOW" "📁 Creating directories..."
+print_message "$YELLOW" "📁 正在创建安装目录..."
 mkdir -p "$INSTALL_DIR"
 mkdir -p "$BIN_DIR"
 mkdir -p "$CONFIG_DIR/templates"
 
 # Clone or download the repository
-print_message "$YELLOW" "📥 Downloading Claude Auto Commit SDK..."
+print_message "$YELLOW" "📥 正在下载 Claude Auto Commit SDK..."
 
 # Remove old installation if exists
 if [ -d "$INSTALL_DIR" ]; then
@@ -170,35 +170,41 @@ if [ -d "$INSTALL_DIR" ]; then
 fi
 
 # Clone the repository
-git clone https://github.com/0xkaz/claude-auto-commit.git "$INSTALL_DIR" 2>/dev/null || {
+git clone https://github.com/ticoAg/claude-auto-commit.git "$INSTALL_DIR" 2>/dev/null || {
     # If git clone fails, try downloading as archive
-    print_message "$YELLOW" "📦 Downloading as archive..."
-    curl -fsSL https://github.com/0xkaz/claude-auto-commit/archive/main.tar.gz | tar -xz -C "$HOME/.tmp"
+    print_message "$YELLOW" "📦 Git 克隆失败，改为下载压缩包..."
+    curl -fsSL https://github.com/ticoAg/claude-auto-commit/archive/main.tar.gz | tar -xz -C "$HOME/.tmp"
     mv "$HOME/.tmp/claude-auto-commit-main" "$INSTALL_DIR"
 }
 
 # Install dependencies
-print_message "$YELLOW" "📦 Installing dependencies..."
+print_message "$YELLOW" "📦 正在安装依赖..."
 cd "$INSTALL_DIR"
 npm install --production
 
 # Create symbolic link
-print_message "$YELLOW" "🔗 Creating command link..."
+print_message "$YELLOW" "🔗 正在创建命令链接..."
 ln -sf "$INSTALL_DIR/bin/claude-auto-commit" "$BIN_DIR/claude-auto-commit"
 chmod +x "$BIN_DIR/claude-auto-commit"
 
-# Create default config if not exists
-if [ ! -f "$CONFIG_DIR/config.json" ]; then
-    print_message "$YELLOW" "⚙️  Creating default configuration..."
-    cat > "$CONFIG_DIR/config.json" << EOF
-{
-  "language": "en",
-  "useEmoji": false,
-  "conventionalCommit": false,
-  "verbose": false
-}
+# Create default config (YAML preferred); keep JSON for backward compatibility
+if [ ! -f "$CONFIG_DIR/config.yml" ]; then
+    print_message "$YELLOW" "⚙️ 正在生成 YAML 默认配置 (config.yml)..."
+    cat > "$CONFIG_DIR/config.yml" << 'EOF'
+# Claude Auto Commit 配置（YAML）
+# 说明：如同时存在 config.yml 与 config.json，将优先读取 YAML。
+language: en               # en/ja/zh
+useEmoji: false            # 是否在提交消息中使用表情
+conventionalCommit: false  # 是否使用 Conventional Commits 格式
+verbose: false             # 是否启用详细输出
 EOF
-    print_message "$GREEN" "✅ Default configuration created"
+    print_message "$GREEN" "✅ 已生成 ~/.claude-auto-commit/config.yml"
+fi
+
+# If legacy JSON exists, keep it but show a migration hint
+if [ -f "$CONFIG_DIR/config.json" ]; then
+    print_message "$YELLOW" "ℹ️  检测到旧的 JSON 配置：$CONFIG_DIR/config.json"
+    print_message "$YELLOW" "   已优先使用 YAML（config.yml）。建议将配置迁移到 YAML。"
 fi
 
 # Update shell profile
@@ -206,28 +212,28 @@ update_shell_profile
 
 # Installation complete
 echo ""
-print_message "$GREEN" "🎉 Installation complete!"
+print_message "$GREEN" "🎉 安装完成！"
 echo ""
-print_message "$BLUE" "📖 Quick Start:"
-echo "   1. Authenticate with Claude (if not already done):"
+print_message "$BLUE" "📖 快速上手："
+echo "   1. 如果尚未完成 Claude 认证，请先执行："
 echo "      claude login"
-echo "      (Choose option 2: Claude app - requires Pro/Max subscription)"
+echo "      （选择选项 2：Claude app，需要 Pro/Max 订阅）"
 echo ""
-echo "   2. Use claude-auto-commit in any git repository:"
+echo "   2. 在任意 Git 仓库中运行 claude-auto-commit："
 echo "      claude-auto-commit"
-echo "      claude-auto-commit -l ja -e -c"
+echo "      claude-auto-commit -l zh -e -c"
 echo "      claude-auto-commit --help"
 echo ""
-echo "   3. Configure defaults:"
-echo "      Edit ~/.claude-auto-commit/config.json"
+echo "   3. 按需修改默认配置："
+echo "      编辑 ~/.claude-auto-commit/config.yml（推荐）或保留现有 config.json（兼容）"
 echo ""
 
 # Check if bin directory is in PATH
 if ! echo "$PATH" | grep -q "$BIN_DIR"; then
-    print_message "$YELLOW" "⚠️  Please add $BIN_DIR to your PATH:"
+    print_message "$YELLOW" "⚠️ 请确保将 $BIN_DIR 加入 PATH："
     echo "   export PATH=\"$BIN_DIR:\$PATH\""
-    echo "   Or restart your terminal to apply changes"
+    echo "   或重启终端以生效"
 fi
 
-print_message "$BLUE" "🔗 Documentation: https://github.com/0xkaz/claude-auto-commit"
+print_message "$BLUE" "🔗 文档与源码：https://github.com/ticoAg/claude-auto-commit"
 echo ""

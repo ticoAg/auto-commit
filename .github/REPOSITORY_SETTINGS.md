@@ -30,7 +30,7 @@ open-source
 
 ### Website
 ```
-https://claude-auto-commit.0xkaz.com
+https://github.com/ticoAg/claude-auto-commit
 ```
 
 ## Repository Settings

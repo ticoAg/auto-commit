@@ -44,13 +44,13 @@ Key features:
 
 Installation is one line:
 ```
-curl -fsSL https://claude-auto-commit.0xkaz.com/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/install.sh | bash
 ```
 
 The project is open source (MIT license) and I'd love your feedback!
 
-GitHub: https://github.com/0xkaz/claude-auto-commit
-Website: https://claude-auto-commit.0xkaz.com
+GitHub: https://github.com/ticoAg/claude-auto-commit
+Website: https://github.com/ticoAg/claude-auto-commit
 
 ---
 
@@ -62,7 +62,7 @@ Website: https://claude-auto-commit.0xkaz.com
 
 Tired of writing "fix bug" or spending minutes crafting the perfect commit message? Let AI do it for you.
 
-🔗 https://claude-auto-commit.0xkaz.com
+🔗 https://github.com/ticoAg/claude-auto-commit
 
 2/ How it works:
 - Analyzes your code changes
@@ -87,11 +87,11 @@ All powered by @AnthropicAI's Claude!
 
 Try it now:
 ```
-curl -fsSL https://claude-auto-commit.0xkaz.com/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/install.sh | bash
 ```
 
 5/ Built with ❤️ and Claude AI
-GitHub: https://github.com/0xkaz/claude-auto-commit
+GitHub: https://github.com/ticoAg/claude-auto-commit
 
 Would love your feedback! What features would you like to see next?
 
@@ -121,7 +121,7 @@ Claude Auto-Commit uses Claude AI to analyze your actual code changes and genera
 
 **Installation:**
 ```bash
-curl -fsSL https://claude-auto-commit.0xkaz.com/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/install.sh | bash
 ```
 
 **Requirements:**
@@ -132,8 +132,8 @@ curl -fsSL https://claude-auto-commit.0xkaz.com/install.sh | bash
 The project is MIT licensed and available on GitHub. I'd love to hear your thoughts and feature requests!
 
 Links:
-- Website: https://claude-auto-commit.0xkaz.com
-- GitHub: https://github.com/0xkaz/claude-auto-commit
+- Website: https://github.com/ticoAg/claude-auto-commit
+- GitHub: https://github.com/ticoAg/claude-auto-commit
 
 ---
 
@@ -156,6 +156,6 @@ Perfect for development teams looking to:
 • Save time on documentation
 • Improve code review processes
 
-Try it today: https://claude-auto-commit.0xkaz.com
+Try it today: https://github.com/ticoAg/claude-auto-commit
 
 #OpenSource #DeveloperTools #AI #Productivity #Git

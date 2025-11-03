@@ -4,7 +4,7 @@
 
 ![Claude Auto-Commit Hero](./docs/images/hero-banner.png)
 
-🤖 **使用Claude Code SDK的AI驱动Git提交消息生成器**
+🤖 **使用 Claude Code SDK 的 AI 驱动 Git 提交消息生成器**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub release](https://img.shields.io/github/release/ticoAg/claude-auto-commit.svg)](https://github.com/ticoAg/claude-auto-commit/releases)
@@ -17,7 +17,7 @@
 
 **语言**: [English](./docs/en/README.md) | [日本語](./docs/ja/README.md)
 
-Claude Auto-Commit是一个开源命令行工具，将AI驱动的提交消息生成集成到您的Git工作流程中。通过分析您的代码更改，使用Claude Code SDK创建高性能、可靠且有意义且符合上下文的提交消息。
+Claude Auto-Commit 是一个开源命令行工具，将 AI 驱动的提交消息生成集成到您的 Git 工作流程中。通过分析您的代码更改，使用 Claude Code SDK 生成高质量、可靠且具备上下文的提交消息。
 
 ## 🌟 转变您的提交历史
 
@@ -31,24 +31,26 @@ Claude Auto-Commit是一个开源命令行工具，将AI驱动的提交消息生
 
 ## 🚀 快速开始
 
-### 安装选项
+### 安装选项（SDK 版）
 
-**方法1：一键安装（本仓库，推荐）**
+> 本项目已完全切换至 SDK 版实现。旧的 Bash CLI 版本（src/claude-auto-commit.sh）已弃用，不再在文档中提供或保证其行为。
+
+**方法1：一键安装（推荐）**
 ```bash
 curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/install.sh | bash
 ```
 
-**方法2：一次性执行（本仓库）**
+**方法2：一次性执行（无需安装）**
 ```bash
 curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/run-once.sh | bash
 ```
 
-**方法3：NPX（备用）**
+**方法3：NPX（Node.js 用户）**
 ```bash
 npx claude-auto-commit
 ```
 
-**方法4：NPM 全局安装（备用）**
+**方法4：NPM 全局安装**
 ```bash
 npm install -g claude-auto-commit
 ```
@@ -59,62 +61,99 @@ npm install -g claude-auto-commit
 # 分析更改并生成提交消息
 claude-auto-commit
 
-# 中文界面，表情符号和常规提交格式
-claude-auto-commit -l ja -e -c
+# 中文界面 + 表情符号 + 约定式提交
+claude-auto-commit -l zh -e -c
 
-# 自定义提交类型并自动推送
+# 指定提交类型并自动推送
 claude-auto-commit -t feat --push
-# 生成提交消息并推送
-claude-auto-commit
 
-# 使用自定义选项
-claude-auto-commit -l zh -e -t feat
+# 使用模板/保存模板（干跑模式）
+claude-auto-commit --dry-run --save-template hotfix
+claude-auto-commit --template hotfix
+
+# 详细输出
+claude-auto-commit -v
 ```
 
-## ✨ 功能特性
+### 本地开发自验（不使用安装脚本）
+- 如需基于本仓库代码直接使用并验证（方案 2：手动克隆 + 软链），请参阅：`docs/local-validation.md`
 
-- 🧠 **AI驱动**: 使用Claude CLI生成智能提交消息
-- 🌍 **多语言支持**: 支持中文、英语、日语、阿拉伯语、西班牙语、法语
-- 📝 **约定式提交**: 可选的约定式提交格式
-- 🔄 **自动更新**: 每日自动更新（可配置）
-- 🎯 **智能分析**: 分析代码更改、文件类型和模式
-- ⚡ **快速轻量**: 为日常开发工作流程优化
-- 🛠️ **高度可配置**: 丰富的自定义选项
+## ✨ 功能特性（SDK 版）
+
+- 🧠 **AI 驱动**: 使用 Claude Code SDK 生成高质量提交消息
+- 🌍 **多语言支持**: 英语、日语、中文（en/ja/zh）
+- 📝 **约定式提交**: 可选 Conventional Commits 格式
+- 📋 **模板与配置**: 支持保存/应用提交模板与本地配置
+- 🎯 **变更分析**: 汇总当前分支、暂存/未暂存文件与更改统计
+- ⚡ **快速轻量**: 面向日常开发的极速体验
+- 🛠️ **可定制**: 通过命令行与配置文件进行自定义
 
 ## 📋 系统要求
 
-- Git仓库
-- 已安装并配置[Claude CLI](https://docs.anthropic.com/claude/cli)
-- Bash shell（macOS、Linux、WSL）
+- Git 仓库
+- Node.js 22+（推荐使用 LTS 或最新稳定版）
+- 已安装并完成登录的 Claude Code 工具（用于鉴权）：`claude login`
+  - SDK 负责生成，CLI 仅用于登录鉴权
 
 ## 🎯 使用示例
 
-### 基本用法
+### 基本用法（SDK 版）
 ```bash
 # 使用自动生成消息的简单提交
 claude-auto-commit
 
-# 自定义分支和表情符号
-claude-auto-commit -b develop -e
-
-# 中文约定式提交
+# 中文 + 约定式提交 + 指定类型
 claude-auto-commit -l zh -c -t feat
 
-# 自定义消息，不推送
-claude-auto-commit -m "自定义提交消息" -n
+# 生成后自动推送（当前分支）
+claude-auto-commit --push
+
+# 干跑并保存为模板，然后按模板提交
+claude-auto-commit --dry-run --save-template hotfix
+claude-auto-commit --template hotfix
 ```
 
 ### 高级选项
 ```bash
-# 手动暂存和详细输出
-claude-auto-commit -s -v
+# 干跑（仅生成不提交）
+claude-auto-commit --dry-run
 
-# 热修复的自定义前缀
-claude-auto-commit -p "[HOTFIX]" -t fix
+# 保存/使用模板
+claude-auto-commit --dry-run --save-template release
+claude-auto-commit --template release
 
-# 更新工具
-claude-auto-commit --update
+# 推送到远端（使用当前分支）
+claude-auto-commit --push
+
+# 详细输出
+claude-auto-commit -v
 ```
+
+## 🔗 使用全局 `claude`（复用你已登录的实例）
+
+本工具启动时会将 Claude Code SDK 的可执行入口指向你系统上的 `claude` 命令，从而复用你在终端已登录/已配置的会话。
+
+- 优先顺序：
+  1) 读取配置文件中的 `claudePath`
+  2) 若未配置，则使用 `which claude`（或 `command -v claude`）从 PATH 探测
+
+在 `--verbose` 模式下会打印所使用的 `claude` 路径与来源（config/which）。
+
+配置示例（YAML）：
+
+```yaml
+# ~/.claude-auto-commit/config.yml
+language: zh
+conventionalCommit: true
+verbose: true
+
+# 显式绑定到特定的 claude 可执行文件（可选）
+claudePath: /opt/homebrew/bin/claude
+
+# 在提交信息末尾追加标识（默认 true）
+appendSignature: true
+```
+
 
 ## 🔧 安装方法
 
@@ -123,12 +162,16 @@ claude-auto-commit --update
 curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/install.sh | bash
 ```
 
-### 方法2: 手动下载
+### 方法2: 手动克隆
 ```bash
-# 为您的平台下载
-curl -L -o claude-auto-commit https://github.com/ticoAg/claude-auto-commit/releases/latest/download/claude-auto-commit-$(uname -s)-$(uname -m)
-chmod +x claude-auto-commit
-sudo mv claude-auto-commit /usr/local/bin/
+git clone https://github.com/ticoAg/claude-auto-commit.git
+cd claude-auto-commit
+npm install --production
+# 将 bin/claude-auto-commit 加入 PATH
+# 方式 A（用户级，推荐）：
+mkdir -p ~/.local/bin && ln -sf "$(pwd)/bin/claude-auto-commit" ~/.local/bin/claude-auto-commit
+# 方式 B（系统级，需要 sudo）：
+sudo ln -sf "$(pwd)/bin/claude-auto-commit" /usr/local/bin/claude-auto-commit
 ```
 
 ### 方法3: NPX（Node.js用户，备用）
@@ -140,43 +183,37 @@ npx claude-auto-commit@latest
 
 - v0.1.5（2025-11-03）：默认安装切换为本仓库脚本；移除 NPM 徽章；在主仓库 README 新增上游仓库说明；同步 package.json 元数据。
 
-## ⚙️ 配置
+## ⚙️ 配置（YAML，SDK 版）
 
-创建 `~/.claude-auto-commit/config.yml`:
+优先读取 `~/.claude-auto-commit/config.yml`，若不存在将兼容 `config.json`。
 
 ```yaml
-auto_update:
-  enabled: true
-  frequency: daily  # daily/weekly/manual/always
-  silent: false
-
-defaults:
-  language: zh
-  branch: main
-  emoji: false
-  conventional: false
-
-git:
-  auto_stage: true
-  auto_push: true
+# Claude Auto Commit 配置（YAML）
+# 如同时存在 config.yml 与 config.json，将优先读取 YAML。
+language: en               # en/ja/zh
+useEmoji: false            # 是否在提交消息中使用表情
+conventionalCommit: false  # 是否使用 Conventional Commits 格式
+verbose: false             # 是否启用详细输出
 ```
 
-## 📖 所有选项
+说明：
+- 推荐使用 YAML；仍兼容历史 JSON 配置（将显示迁移提示）。
+- 运行时也可通过命令行参数覆盖上述默认值。
+
+## 📖 所有选项（SDK 版）
 
 | 选项 | 说明 | 默认值 |
 |------|------|--------|
-| `-b, --branch <branch>` | 推送目标分支 | `main` |
-| `-l, --language <lang>` | 语言 (zh/en/ja/ar/es/fr) | `en` |
+| `-l, --language <lang>` | 语言（en/ja/zh） | `en` |
 | `-e, --emoji` | 使用表情符号 | `false` |
-| `-n, --no-push` | 不推送 | `false` |
-| `-s, --no-stage` | 手动暂存 | `false` |
-| `-m, --message <msg>` | 自定义消息 | Claude生成 |
-| `-t, --type <type>` | 提交类型 | 自动 |
-| `-c, --conventional` | 约定式提交 | `false` |
-| `-p, --prefix <prefix>` | 前缀 | 无 |
+| `-c, --conventional` | 使用约定式提交格式 | `false` |
+| `-t, --type <type>` | 指定提交类型（feat/fix/docs/style/refactor/test/chore） | 空（自动判断） |
+| `-d, --dry-run` | 仅生成不提交 | `false` |
 | `-v, --verbose` | 详细输出 | `false` |
-| `--update` | 立即更新 | - |
-| `--no-update` | 跳过本次更新 | - |
+| `-p, --push` | 提交后推送（当前分支） | `false` |
+| `--template <name>` | 使用已保存模板 | - |
+| `--save-template <name>` | 干跑模式下保存模板 | - |
+| `--list-templates` | 列出可用模板 | - |
 | `--version` | 显示版本 | - |
 | `-h, --help` | 显示帮助 | - |
 
@@ -195,10 +232,7 @@ Claude AI分析代码更改并考虑以下因素生成消息：
 - **英语**: 简洁标准的表达
 - **日语**: 礼貌详细的说明
 
-### 自动更新系统
-- 每日自动更新检查
-- 无缝后台更新
-- 失败时自动回滚
+> 说明：SDK 版不再提供“自动更新”能力；如需获取最新版，请使用安装脚本或 `npx`。
 
 ## 🤝 贡献
 
@@ -210,7 +244,7 @@ Claude AI分析代码更改并考虑以下因素生成消息：
 
 ## 🙏 致谢
 
-- [Anthropic](https://anthropic.com) 的Claude CLI
+- [Anthropic](https://anthropic.com) 的 Claude Code SDK
 - [约定式提交](https://conventionalcommits.org) 规范
 - 开源社区的启发
 

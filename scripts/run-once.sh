@@ -1,43 +1,43 @@
 #!/bin/bash
 
-# Claude Auto Commit SDK - One-time Execution Script
-# Usage: curl -fsSL https://raw.githubusercontent.com/0xkaz/claude-auto-commit/main/scripts/run-once.sh | bash
+# Claude Auto Commit SDK - 临时执行脚本
+# 用法：curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/run-once.sh | bash
 
 set -e
 
 TEMP_DIR="/tmp/claude-auto-commit-$$"
-REPO_URL="https://github.com/0xkaz/claude-auto-commit"
+REPO_URL="https://github.com/ticoAg/claude-auto-commit"
 
-echo "🚀 Running Claude Auto Commit SDK (One-time execution)"
-echo "   No installation required - temporary execution"
+echo "🚀 正在临时运行 Claude Auto Commit SDK"
+echo "   无需安装，仅在临时目录执行"
 echo ""
 
 # Check prerequisites
 if ! command -v node >/dev/null 2>&1; then
-    echo "❌ Node.js is required. Please install: https://nodejs.org"
+    echo "❌ 需要 Node.js，请先安装：https://nodejs.org"
     exit 1
 fi
 
 NODE_VERSION=$(node -v 2>/dev/null | sed 's/v//' | cut -d. -f1)
 if [ -z "$NODE_VERSION" ] || [ "$NODE_VERSION" -lt 22 ]; then
-    echo "❌ Node.js 22+ required. Current: $(node -v)"
+    echo "❌ 需要 Node.js 22+，当前版本 $(node -v)"
     exit 1
 fi
 
 if ! command -v git >/dev/null 2>&1; then
-    echo "❌ Git is required"
+    echo "❌ 需要 Git，请先安装"
     exit 1
 fi
 
 # Check if we're in a git repository
 if ! git rev-parse --git-dir >/dev/null 2>&1; then
-    echo "❌ Please run this in a git repository"
+    echo "❌ 请在 Git 仓库内运行本脚本"
     exit 1
 fi
 
 # Check for Claude Code SDK
 if ! command -v claude >/dev/null 2>&1; then
-    echo "⚠️  Claude Code SDK not found. Installing temporarily..."
+    echo "⚠️  未检测到 Claude Code SDK，正在临时安装..."
     npm install -g @anthropic-ai/claude-code
 fi
 
@@ -45,7 +45,7 @@ fi
 mkdir -p "$TEMP_DIR"
 cd "$TEMP_DIR"
 
-echo "📥 Downloading Claude Auto Commit SDK..."
+echo "📥 正在下载 Claude Auto Commit SDK..."
 
 # Download and extract
 git clone --depth 1 "$REPO_URL" . 2>/dev/null || {
@@ -53,26 +53,26 @@ git clone --depth 1 "$REPO_URL" . 2>/dev/null || {
 }
 
 # Install dependencies
-echo "📦 Installing dependencies..."
+echo "📦 正在安装依赖..."
 npm install --silent
 
 # Check Claude CLI authentication
 if ! claude -p "test" >/dev/null 2>&1; then
-    echo "⚠️  Claude CLI not authenticated"
-    echo "   Please run: claude login"
-    echo "   (Requires Claude Pro/Max subscription)"
+    echo "⚠️  Claude CLI 未认证"
+    echo "   请执行：claude login"
+    echo "   （需要 Claude Pro/Max 订阅）"
     echo ""
     exit 1
 fi
 
 # Parse command line arguments and pass them through
-echo "🤖 Running claude-auto-commit..."
+echo "🤖 正在执行 claude-auto-commit..."
 node src/claude-auto-commit.js "$@"
 
 # Cleanup
 echo ""
-echo "🧹 Cleaning up temporary files..."
+echo "🧹 正在清理临时文件..."
 cd /
 rm -rf "$TEMP_DIR"
 
-echo "✅ Done! One-time execution completed."
+echo "✅ 完成！临时执行已结束。"

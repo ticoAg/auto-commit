@@ -4,7 +4,7 @@
 
 ![Claude Auto-Commit Hero](../images/hero-banner.png)
 
-🤖 **Claude Code SDKを使用したAI駆動のGitコミットメッセージ生成ツール**
+🤖 Claude Code SDK を用いた AI 駆動の Git コミットメッセージ生成ツール（SDK 版のみ）
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub release](https://img.shields.io/github/release/ticoAg/claude-auto-commit.svg)](https://github.com/ticoAg/claude-auto-commit/releases)
@@ -15,221 +15,102 @@
 
 </div>
 
-**言語**: [English](../en/README.md) | [中文](../zh/README.md)
+言語: [English](../en/README.md) | [中文](../../README.md)
 
-Claude Auto-Commitは、AI駆動のコミットメッセージ生成をGitワークフローに統合するオープンソースのコマンドラインツールです。コードの変更を分析し、Claude Code SDKを使用して高性能で信頼性の高い、意味のある文脈に沿ったコミットメッセージを作成します。
-
-## 🌟 コミット履歴を変革
-
-<div align="center">
-
-![Before and After Comparison](../images/demo-before-after-english.png)
-
-*曖昧なコミットメッセージにさようなら。Claude AIにコードの物語を語る意味のあるコミットを書かせましょう。*
-
-</div>
-
-⚠️ **重要な注意事項**: 
-- **Claude Pro/Maxサブスクリプション**とClaude CLI認証が必要です
-- **APIキーは不要** - Claude Code SDKでOAuth認証を使用
-- まだ認証していない場合は `claude login` を実行してください
-- デフォルトで全ての変更を自動ステージングしてコミットします
-- リモートリポジトリへの自動プッシュは `--push` フラグを使用
-- コミット前のプレビューは `--dry-run` フラグを使用
+Claude Auto-Commit は、Git の変更内容を解析し、Claude Code SDK を用いて高品質でコンテキストに即したコミットメッセージを生成します。
 
 ## 🚀 クイックスタート
 
-### インストール方法
+### インストール
 
-**方法1: スクリプトインストール（本リポジトリ・推奨）**
 ```bash
+# 方法1（推奨）
 curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/install.sh | bash
-```
 
-**方法2: ワンタイムスクリプト実行（本リポジトリ）**
-```bash
+# 方法2: その場実行（インストール不要）
 curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/run-once.sh | bash
-```
 
-**方法3: NPX（フォールバック）**
-```bash
+# 方法3: NPX
 npx claude-auto-commit
-```
 
-**方法4: NPM グローバルインストール（フォールバック）**
-```bash
+# 方法4: NPM グローバル
 npm install -g claude-auto-commit
 ```
 
 ### 基本的な使い方
 
 ```bash
-# 変更を分析してコミットメッセージ生成
-npx claude-auto-commit
-
-# 日本語・絵文字・Conventional Commits形式
-npx claude-auto-commit -l ja -e -c
-
-# カスタムコミットタイプで自動プッシュ
-npx claude-auto-commit -t feat --push
+claude-auto-commit                    # 生成してコミット
+claude-auto-commit -l ja -e -c        # 日本語 + 絵文字 + Conventional
+claude-auto-commit -t feat --push     # コミットタイプ指定 + 自動 push（現在ブランチ）
+claude-auto-commit --dry-run -v       # 事前確認 + 詳細出力
+claude-auto-commit --dry-run --save-template hotfix
+claude-auto-commit --template hotfix
 ```
 
-### 認証設定
+### 必要要件
 
-Claude Auto-CommitはClaude Code SDKを使用し、**Claude ProまたはMaxサブスクリプション**が必要です：
+- Git リポジトリ
+- Node.js 22+
+- `claude login` による認証済みの Claude Code ツール（SDK はこの認証を利用。実行時に CLI コマンドは呼び出しません）
 
-```bash
-# 初回設定: Claude CLIにログイン
-claude login
+## ✨ 機能（SDK）
 
-# オプション選択: "2. Claude app (requires Max subscription)"
-# ブラウザでOAuth認証が開きます
-# APIキー不要 - 認証は自動で処理されます
-```
+- Claude Code SDK による AI 生成
+- 対応言語: 英語 / 日本語 / 中国語（en/ja/zh）
+- Conventional Commits（任意）
+- テンプレートとローカル設定
+- 日常開発向けの軽量・高速な体験
 
-初回ログイン後は認証情報が保存され、claude-auto-commitがシームレスに動作します。
+## ⚙️ 設定（YAML 推奨）
 
-## ✨ 機能
-
-- 🧠 **AI駆動**: Claude CLIを使用して智的なコミットメッセージを生成
-- 🌍 **多言語対応**: 日本語、英語、中国語、アラビア語、スペイン語、フランス語に対応
-- 📝 **Conventional Commits**: オプションでConventional Commits形式に対応
-- 🔄 **自動更新**: 毎日の自動更新（設定可能）
-- 🎯 **智的分析**: コード変更、ファイルタイプ、パターンを分析
-- ⚡ **高速・軽量**: 日常的な開発ワークフローに最適化
-- 🛠️ **高度な設定**: 豊富なカスタマイズオプション
-
-## 📋 要件
-
-- Gitリポジトリ
-- [Claude CLI](https://docs.anthropic.com/claude/cli) がインストール・設定済み
-- Bashシェル（macOS、Linux、WSL）
-
-## 🎯 使用例
-
-### 基本的な使用方法
-```bash
-# 自動生成されたメッセージでシンプルなコミット
-claude-auto-commit
-
-# カスタムブランチと絵文字
-claude-auto-commit -b develop -e
-
-# 日本語でConventional Commits
-claude-auto-commit -l ja -c -t feat
-
-# カスタムメッセージ、プッシュなし
-claude-auto-commit -m "カスタムコミットメッセージ" -n
-```
-
-### 高度なオプション
-```bash
-# 手動ステージングと詳細出力
-claude-auto-commit -s -v
-
-# ホットフィックス用のカスタムプレフィックス
-claude-auto-commit -p "[HOTFIX]" -t fix
-
-# ツールの更新
-claude-auto-commit --update
-```
-
-## 🔧 インストール方法
-
-### 方法1: ワンライナー（推奨）
-```bash
-curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/install.sh | bash
-```
-
-### 方法2: 手動ダウンロード
-```bash
-# プラットフォーム用にダウンロード
-curl -L -o claude-auto-commit https://github.com/ticoAg/claude-auto-commit/releases/latest/download/claude-auto-commit-$(uname -s)-$(uname -m)
-chmod +x claude-auto-commit
-sudo mv claude-auto-commit /usr/local/bin/
-```
-
-### 方法3: NPX（Node.jsユーザー向け・フォールバック）
-```bash
-npx claude-auto-commit@latest
-```
-
-## ⚙️ 設定
-
-`~/.claude-auto-commit/config.yml`を作成：
+`~/.claude-auto-commit/config.yml` を作成または編集（YAML を優先。JSON も互換対応）：
 
 ```yaml
-auto_update:
-  enabled: true
-  frequency: daily  # daily/weekly/manual/always
-  silent: false
-
-defaults:
-  language: ja
-  branch: main
-  emoji: false
-  conventional: false
-
-git:
-  auto_stage: true
-  auto_push: true
+# Claude Auto Commit 設定（YAML）
+# config.yml と config.json が両方ある場合、YAML を優先します。
+language: ja               # en/ja/zh
+useEmoji: false            # 絵文字を使用するか
+conventionalCommit: false  # Conventional Commits 形式を使用するか
+verbose: false             # 詳細出力
 ```
 
-## 📖 全オプション
+補足:
+- YAML を推奨。JSON も後方互換として対応（移行ヒントを表示）。
+- 実行時のコマンドライン引数は設定値を上書きします。
 
-| オプション | 説明 | デフォルト |
-|-----------|------|----------|
-| `-b, --branch <branch>` | プッシュ先ブランチ | `main` |
-| `-l, --language <lang>` | 言語 (ja/en/zh/ar/es/fr) | `en` |
-| `-e, --emoji` | 絵文字使用 | `false` |
-| `-n, --no-push` | プッシュしない | `false` |
-| `-s, --no-stage` | 手動ステージング | `false` |
-| `-m, --message <msg>` | カスタムメッセージ | Claude生成 |
-| `-t, --type <type>` | コミットタイプ | 自動 |
-| `-c, --conventional` | Conventional Commits | `false` |
-| `-p, --prefix <prefix>` | プレフィックス | なし |
+## 📖 オプション（SDK）
+
+| オプション | 説明 | 既定値 |
+|------|------|--------|
+| `-l, --language <lang>` | 言語（en/ja/zh） | `en` |
+| `-e, --emoji` | 絵文字を使用 | `false` |
+| `-c, --conventional` | Conventional Commits 形式 | `false` |
+| `-t, --type <type>` | コミットタイプ（feat/fix/docs/style/refactor/test/chore） | 空（自動） |
+| `-d, --dry-run` | 生成のみ（コミットしない） | `false` |
 | `-v, --verbose` | 詳細出力 | `false` |
-| `--update` | 即座に更新 | - |
-| `--no-update` | 今回は更新をスキップ | - |
+| `-p, --push` | コミット後に push（現在ブランチ） | `false` |
+| `--template <name>` | 保存済みテンプレートを使用 | - |
+| `--save-template <name>` | テンプレート保存（dry-run 時） | - |
+| `--list-templates` | 利用可能なテンプレート一覧 | - |
 | `--version` | バージョン表示 | - |
 | `-h, --help` | ヘルプ表示 | - |
 
-## 🌟 特徴
-
-### 智的なコミットメッセージ生成
-Claude AIがコード変更を分析し、以下を考慮してメッセージを生成：
-- 変更されたファイルの種類
-- 追加・修正・削除された行数
-- コードの実際の差分
-- プロジェクトのコンテキスト
-
-### 多言語対応
-各言語のプログラミングコミュニティの文化に適したメッセージを生成：
-- **日本語**: 丁寧で詳細な説明
-- **英語**: 簡潔で標準的な表現
-- **中国語**: 技術的で直接的な表現
-
-### 自動更新システム
-- 毎日の自動更新チェック
-- シームレスなバックグラウンド更新
-- 失敗時の自動ロールバック
-
 ## 🤝 コントリビューション
 
-コントリビューションを歓迎します！詳細は[CONTRIBUTING.md](../../CONTRIBUTING.md)をご覧ください。
+歓迎します。詳細は [CONTRIBUTING.md](../../CONTRIBUTING.md) をご参照ください。
 
 ## 📄 ライセンス
 
-このプロジェクトはMITライセンスの下で公開されています - 詳細は[LICENSE](../../LICENSE)ファイルをご覧ください。
+MIT ライセンス。詳細は [LICENSE](../../LICENSE) をご参照ください。
 
 ## 🙏 謝辞
 
-- [Anthropic](https://anthropic.com) のClaude CLI
-- [Conventional Commits](https://conventionalcommits.org) 仕様
-- オープンソースコミュニティからのインスピレーション
+- [Anthropic](https://anthropic.com) の Claude Code SDK
+- [Conventional Commits](https://conventionalcommits.org)
+- OSS コミュニティ
 
 ---
 
-**開発者コミュニティへの愛を込めて ❤️**
+開発者コミュニティへの感謝を込めて ❤️
 
-[問題を報告](https://github.com/ticoAg/claude-auto-commit/issues) | [機能要求](https://github.com/ticoAg/claude-auto-commit/issues/new?template=feature_request.md)

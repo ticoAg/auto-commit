@@ -1,79 +1,79 @@
-# Claude Auto-Commit プロジェクト
+# Claude Auto-Commit Project
 
-## 🎯 プロジェクト概要
-Claude Code SDKを使用したAI駆動のGitコミットメッセージ生成ツール
+## 🎯 Overview
+An AI-powered Git commit message generator built on the Claude Code SDK.
 
-## 📋 現在の状態
-- ✅ v0.1.0 SDK版リリース完了
-- ✅ Claude CLI → Claude Code SDK 完全移行
-- ✅ パフォーマンス大幅改善（並列処理・キャッシュ）
-- ✅ 新機能追加（テンプレート・設定ファイル・ワンライナー実行）
-- ✅ エラーハンドリング強化
-- ✅ NPMパッケージサポート
-- ✅ 多言語対応（英語・日本語）
-- ✅ GitHubリポジトリ公開: https://github.com/0xkaz/claude-auto-commit
+## 📋 Current Status
+- ✅ v0.1.0 SDK-based release completed
+- ✅ Full migration from Claude CLI to Claude Code SDK
+- ✅ Major performance improvements (parallelism and caching)
+- ✅ New features added (templates, config file, one-liner execution)
+- ✅ Enhanced error handling
+- ✅ NPM package support
+- ✅ Multi-language support (English and Japanese)
+- ✅ GitHub repository: https://github.com/ticoAg/claude-auto-commit
 
-## 🚀 次のTODO
+## 🚀 Next TODOs
 
-### v0.1.0 完了事項
-- ✅ Claude Code SDK完全移行
-- ✅ パフォーマンス最適化
-- ✅ 新機能実装（テンプレート・設定・ワンライナー）
-- ✅ NPMパッケージ化対応
+### v0.1.0 Completed
+- ✅ SDK migration finalized
+- ✅ Performance optimization
+- ✅ New features shipped (templates, config, one-liner)
+- ✅ NPM packaging supported
 
-### 今後のバージョン
-- [ ] v0.1.1: NPM公開・パッケージ最適化
-- [ ] v0.2.0: VS Code拡張機能
-- [ ] v0.3.0: GitHub Actions統合
-- [ ] v1.0.0: プラグインシステム・企業向け機能
+### Upcoming Versions
+- [ ] v0.1.1: NPM publishing and package optimization
+- [ ] v0.2.0: VS Code extension
+- [ ] v0.3.0: GitHub Actions integration
+- [ ] v1.0.0: Plugin system and enterprise features
 
-### 技術的改善
-- [ ] TypeScript完全対応
-- [ ] テストスイート拡充
-- [ ] CI/CDパイプライン強化
-- [ ] ドキュメント自動生成
+### Technical Improvements
+- [ ] Full TypeScript support
+- [ ] Expanded test suite
+- [ ] Stronger CI/CD pipeline
+- [ ] Automated documentation generation
 
-## 📁 プロジェクト構造
+## 📁 Project Structure
 ```
 claude-auto-commit/
 ├── src/
-│   ├── claude-auto-commit.js    # 🆕 メインSDKスクリプト
-│   └── claude-auto-commit.sh    # ⚠️  旧CLIスクリプト（非推奨・移行期間のみ）
+│   ├── claude-auto-commit.js    # 🆕 Main SDK-based script
+│   └── claude-auto-commit.sh    # ⚠️  Legacy CLI script (deprecated, for migration period only)
 ├── bin/
-│   └── claude-auto-commit       # 実行可能ファイル（JS版）
+│   └── claude-auto-commit       # Executable (JS version)
 ├── scripts/
-│   ├── install.sh              # ワンライナーインストーラー
-│   └── run-once.sh             # ワンタイム実行スクリプト
-├── docs/                       # 多言語ドキュメント
-├── package.json                # NPMパッケージ設定
-└── CHANGELOG.md                # バージョン履歴
+│   ├── install.sh              # One-liner installer
+│   └── run-once.sh             # One-time execution script
+├── docs/                       # Multi-language documentation
+├── package.json                # NPM package settings
+└── CHANGELOG.md                # Version history
 ```
 
-## 💡 技術仕様
-- **Runtime**: Node.js 22.0.0+, ES Modules
-- **SDK**: @anthropic-ai/claude-code ^1.0.22
-- **設定ファイル**: `~/.claude-auto-commit/config.json`
-- **テンプレート**: `~/.claude-auto-commit/templates/`
-- **パフォーマンス**: 並列処理、インテリジェントキャッシュ
+## 💡 Technical Specs
+- Runtime: Node.js 22.0.0+, ES Modules
+- SDK: @anthropic-ai/claude-code ^1.0.22
+- Config file: `~/.claude-auto-commit/config.json`
+- Templates: `~/.claude-auto-commit/templates/`
+- Performance: Parallel processing and intelligent caching
 
-## 🔄 インストール方式
-1. **ワンライナー** (推奨): スクリプトベース、自動セットアップ
-2. **NPM Global**: `npm install -g claude-auto-commit`
-3. **ワンタイム実行**: インストール不要、一回のみ実行
+## 🔄 Installation Methods
+1. One-liner (recommended): Script-based automatic setup
+2. NPM Global: `npm install -g claude-auto-commit`
+3. One-time execution: No installation, run once only
 
-## 🚨 CLI版廃止スケジュール
+## 🚨 CLI Deprecation Schedule
 
-### v0.1.0（現在）: 両方サポート + 非推奨警告
-- ✅ **src/claude-auto-commit.js**: メイン推奨版（SDK）
-- ⚠️ **src/claude-auto-commit.sh**: レガシー版（CLI）+ 起動時警告表示
-- 🎯 **目的**: 既存ユーザーの段階的移行
-- 📢 **警告内容**: 性能差、新機能、移行手順、削除予定日
+### v0.1.0 (current): Dual support with deprecation warning
+- ✅ `src/claude-auto-commit.js`: Primary (SDK-based)
+- ⚠️ `src/claude-auto-commit.sh`: Legacy (CLI) with startup warning
+- 🎯 Goal: Gradual migration for existing users
+- 📢 Warning covers: performance gap, new features, migration steps, planned removal date
 
-### v0.2.0（予定）: CLI版完全削除
-- ❌ **src/claude-auto-commit.sh**: 削除
-- 📋 **移行ガイド**: 完全移行の手順提供
-- 🎯 **目的**: 技術的負債の解消、メンテナンス負荷軽減
+### v0.2.0 (planned): Remove legacy CLI
+- ❌ Remove `src/claude-auto-commit.sh`
+- 📋 Provide a full migration guide
+- 🎯 Goal: Reduce technical debt and maintenance cost
 
-## 📅 リリース履歴
-- 2025/6/14: v0.1.0 SDK版リリース
-- 2025/6/13: v0.0.5 CLI版（最終）
+## 📅 Release History
+- June 14, 2025: v0.1.0 SDK-based release
+- June 13, 2025: v0.0.5 CLI version (final)

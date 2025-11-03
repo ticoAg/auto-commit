@@ -1,130 +1,86 @@
-# Claude Auto-Commit Reference (v0.1.0)
+# Claude Auto-Commit 参考手册 (v0.1.5)
 
-Claude Code SDKを活用した高性能な自動コミットツールの技術仕様です。
+> 更新记录：2025-11-03 · v0.1.5 · 新增中文提交信息支持与无变更提示优化
 
-## 基本使用方法
+Claude Auto-Commit 基于 Claude Code SDK，提供面向中文团队的自动化提交助手。本手册覆盖命令使用、参数说明与配置要点。
+
+## 快速开始
 
 ```bash
-# 基本実行
+# 基本执行（需已处于 Git 仓库）
 claude-auto-commit
 
-# NPMグローバルインストール後
+# 首次安装（NPM 全局）
 npm install -g claude-auto-commit
 claude-auto-commit
 
-# ワンタイム実行
-curl -fsSL https://raw.githubusercontent.com/0xkaz/claude-auto-commit/main/scripts/run-once.sh | bash
+# 一次性执行脚本
+curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/run-once.sh | bash
 ```
 
-## 高度なオプション
+## 常用命令示例
 
 ```bash
-# 日本語 + 絵文字 + Conventional Commits
-claude-auto-commit -l ja -e -c
+# 中文提交信息 + 表情 + Conventional Commits
+claude-auto-commit -l zh -e -c
 
-# 特定コミットタイプで自動プッシュ
+# 指定提交类型并自动推送
 claude-auto-commit -t feat --push
 
-# ドライラン（プレビューのみ）
+# 仅预览提交信息
 claude-auto-commit --dry-run
 
-# 詳細実行情報とパフォーマンス表示
+# 查看详细分析与耗时
 claude-auto-commit --verbose
 
-# テンプレート使用
-claude-auto-commit --template my-template
-
-# テンプレート保存（ドライラン時）
-claude-auto-commit --dry-run --save-template feature-update
-```
-
-## 全オプション
-
-| オプション | 短縮形 | 説明 | デフォルト |
-|-----------|--------|------|----------|
-| `--language <lang>` | `-l` | 言語 (en/ja) | `en` |
-| `--emoji` | `-e` | 絵文字使用 | `false` |
-| `--conventional` | `-c` | Conventional Commits | `false` |
-| `--type <type>` | `-t` | コミットタイプ | 自動 |
-| `--dry-run` | `-d` | プレビューのみ | `false` |
-| `--verbose` | `-v` | 詳細出力 | `false` |
-| `--push` | `-p` | 自動プッシュ | `false` |
-| `--template <name>` | | テンプレート使用 | なし |
-| `--save-template <name>` | | テンプレート保存 | なし |
-| `--list-templates` | | テンプレート一覧 | - |
-| `--help` | `-h` | ヘルプ表示 | - |
-
-## 機能
-
-### 🧠 AI機能
-- ✅ Claude Code SDKによる智的なコミットメッセージ生成
-- ✅ 並列処理とキャッシュによる高速化
-- ✅ 指数バックオフによるリトライ機能
-- ✅ タイムアウト機能と堅牢なエラーハンドリング
-
-### 📝 コミット機能
-- ✅ 変更がない場合の自動終了
-- ✅ 自動ステージング
-- ✅ Conventional Commits対応
-- ✅ 絵文字サポート
-- ✅ ドライランモード
-- ✅ オプショナル自動プッシュ
-
-### 🌐 多言語・設定
-- ✅ 多言語対応（英語・日本語）
-- ✅ JSON設定ファイル（キャッシュ機能付き）
-- ✅ テンプレートシステム
-- ✅ 詳細ログとパフォーマンス測定
-
-### 📦 インストール・配布
-- ✅ NPMパッケージ対応
-- ✅ ワンライナーインストーラー
-- ✅ ワンタイム実行スクリプト
-- ✅ ES Modules + Node.js 22+対応
-
-## 使用例
-
-### 日常的な開発
-```bash
-claude-auto-commit  # 最もシンプル
-```
-
-### フィーチャー開発
-```bash
-claude-auto-commit -t feat -e --push
-```
-
-### バグ修正
-```bash
-claude-auto-commit -t fix -c -l en
-```
-
-### テンプレート活用
-```bash
-# テンプレート保存
-claude-auto-commit --dry-run --save-template hotfix
-
-# テンプレート使用
+# 使用或保存模板
 claude-auto-commit --template hotfix
+claude-auto-commit --dry-run --save-template hotfix
 ```
 
-## 技術仕様
+## 参数列表
 
-### 依存関係
-- **Node.js**: 22.0.0以上
-- **@anthropic-ai/claude-code**: ^1.0.22
-- **Git**: 任意のバージョン
+| 参数                     | 短命令 | 说明                                   | 默认值   |
+| ------------------------ | ------ | -------------------------------------- | -------- |
+| `--language <lang>`      | `-l`   | 提交语言（`en`/`ja`/`zh`）             | `en`     |
+| `--emoji`                | `-e`   | 在提交信息中加入表情                   | `false`  |
+| `--conventional`         | `-c`   | 启用 Conventional Commits 规范         | `false`  |
+| `--type <type>`          | `-t`   | 指定提交类型（如 feat、fix 等）        | 自动推断 |
+| `--dry-run`              | `-d`   | 仅生成提交信息，不真正提交             | `false`  |
+| `--verbose`              | `-v`   | 输出调试信息与性能统计                 | `false`  |
+| `--push`                 | `-p`   | 提交后自动推送当前分支                 | `false`  |
+| `--template <name>`      |        | 使用已保存模板                         | 无       |
+| `--save-template <name>` |        | 将生成结果保存为模板（需 `--dry-run`） | 无       |
+| `--list-templates`       |        | 列出已保存模板                         | -        |
+| `--help`                 | `-h`   | 显示帮助信息                           | -        |
+| `--version`              |        | 显示版本信息                           | -        |
 
-### 設定ファイル
-- **場所**: `~/.claude-auto-commit/config.json`
-- **テンプレート**: `~/.claude-auto-commit/templates/`
-- **キャッシュ**: メモリ内、5分間TTL
+## 主要能力
 
-### パフォーマンス
-- **並列処理**: Git コマンドの並列実行
-- **キャッシュ**: 設定ファイル、Git 結果のキャッシュ
-- **リトライ**: 最大3回、指数バックオフ
-- **タイムアウト**: 30秒（設定可能）
+- 🧠 基于 Claude Code SDK 生成提交信息，支持中英日语输出。
+- ⚡ 并行执行 Git 命令并缓存结果，加速分析。
+- 🔄 最多 3 次重试，失败时指数退避，默认超时 30 秒。
+- 📦 自动暂存改动，支持 Conventional Commits、表情与模板。
+- 🔍 `--verbose` 模式提供结构化日志（含 `trace_id`）与性能耗时。
 
-### 環境変数
-- **ANTHROPIC_API_KEY**: 必須、Claude API キー
+## 配置文件
+
+- 存放路径：`~/.claude-auto-commit/config.json`
+- 模板目录：`~/.claude-auto-commit/templates/`
+- 示例配置（中文团队推荐）：
+
+```json
+{
+    "language": "zh",
+    "useEmoji": true,
+    "conventionalCommit": true,
+    "verbose": false
+}
+```
+
+## 使用提示
+
+- **网络要求**：生成提交信息需配置 `ANTHROPIC_API_KEY` 并具备外网访问。
+- **无改动提示**：若仓库干净，将输出“未检测到变更”并在 `--verbose` 模式下打印结构化日志。
+- **模板策略**：推荐在 `--dry-run` 下验证模板效果，再正式提交。
+- **故障排查**：若生成阶段失败，命令会附带 `trace_id`，便于在日志中聚合排查。

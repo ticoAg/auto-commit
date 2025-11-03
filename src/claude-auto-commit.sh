@@ -2,7 +2,7 @@
 
 # Claude Auto-Commit - AI-powered Git commit message generator
 # Version: 0.0.5 (DEPRECATED)
-# Repository: https://github.com/0xkaz/claude-auto-commit
+# Repository: https://github.com/ticoAg/claude-auto-commit
 
 VERSION="0.0.5"
 
@@ -10,12 +10,12 @@ VERSION="0.0.5"
 echo ""
 echo "⚠️  WARNING: CLI version (claude-auto-commit.sh) is DEPRECATED!"
 echo "   📦 Please migrate to SDK version for better performance:"
-echo "   📥 Installation: curl -fsSL https://raw.githubusercontent.com/0xkaz/claude-auto-commit/main/scripts/install.sh | bash"
+echo "   📥 Installation: curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/install.sh | bash"
 echo "   🆕 New features: Templates, Config files, Performance optimizations"
 echo "   📅 CLI version will be removed in v0.2.0"
 echo ""
 sleep 3
-REPO="0xkaz/claude-auto-commit"
+REPO="ticoAg/claude-auto-commit"
 CONFIG_DIR="$HOME/.claude-auto-commit"
 CONFIG_FILE="$CONFIG_DIR/config.yml"
 LAST_CHECK_FILE="$CONFIG_DIR/last-check"
@@ -313,7 +313,7 @@ while [[ $# -gt 0 ]]; do
             ;;
         --version)
             echo "Claude Auto-Commit v$VERSION"
-            echo "Repository: https://github.com/0xkaz/claude-auto-commit"
+            echo "Repository: https://github.com/ticoAg/claude-auto-commit"
             exit 0
             ;;
         -h|--help)
