@@ -832,12 +832,12 @@ Claude Auto Commit (SDK 版本 ${CLI_VERSION}) / Claude Auto Commit (SDK Version
   -h, --help                  显示帮助信息 / Show this help message
 
 示例 / Examples:
-  node src/claude-auto-commit.js
-  node src/claude-auto-commit.js -l ja -e -c
-  node src/claude-auto-commit.js -l zh -e -c
-  node src/claude-auto-commit.js -t feat --push
-  node src/claude-auto-commit.js --dry-run --save-template my-template
-  node src/claude-auto-commit.js --template my-template
+  claude-auto-commit
+  claude-auto-commit -l ja -e -c
+  claude-auto-commit -l zh -e -c
+  claude-auto-commit -t feat --push
+  claude-auto-commit --dry-run --save-template my-template
+  claude-auto-commit --template my-template
 
 配置 / Configuration:
   路径 / Path: ~/.claude-auto-commit/config.yml (YAML only)
