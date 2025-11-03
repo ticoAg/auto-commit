@@ -1,6 +1,6 @@
 {
   "name": "claude-auto-commit",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "AI-powered Git commit message generator using Claude Code SDK",
   "main": "src/claude-auto-commit.js",
   "bin": {
@@ -24,7 +24,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/0xkaz/claude-auto-commit.git"
+    "url": "git+https://github.com/ticoAg/claude-auto-commit.git"
   },
   "author": "rakd",
   "license": "MIT",
@@ -55,7 +55,7 @@
     "doc": "docs"
   },
   "bugs": {
-    "url": "https://github.com/0xkaz/claude-auto-commit/issues"
+    "url": "https://github.com/ticoAg/claude-auto-commit/issues"
   },
-  "homepage": "https://github.com/0xkaz/claude-auto-commit#readme"
+  "homepage": "https://github.com/ticoAg/claude-auto-commit#readme"
 }

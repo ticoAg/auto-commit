@@ -5,7 +5,7 @@ Thank you for your interest in contributing to Claude Auto-Commit! We welcome co
 ## 🤝 How to Contribute
 
 ### Reporting Issues
-1. Check existing [issues](https://github.com/0xkaz/claude-auto-commit/issues) first
+1. Check existing [issues](https://github.com/ticoAg/claude-auto-commit/issues) first
 2. Use the appropriate issue template
 3. Provide detailed information including:
    - Version number
@@ -30,7 +30,7 @@ Thank you for your interest in contributing to Claude Auto-Commit! We welcome co
 #### Development Setup
 ```bash
 # Clone the repository
-git clone https://github.com/0xkaz/claude-auto-commit.git
+git clone https://github.com/ticoAg/claude-auto-commit.git
 cd claude-auto-commit
 
 # Make the script executable
@@ -121,7 +121,15 @@ docs: update installation instructions
 ## 🤔 Questions?
 
 - Check the [README](./README.md) first
-- Search [existing issues](https://github.com/0xkaz/claude-auto-commit/issues)
+- Search [existing issues](https://github.com/ticoAg/claude-auto-commit/issues)
+
+## Upstream / 原始仓库
+
+本项目是从上游仓库 fork 并持续维护的版本：
+
+- 0xkaz/claude-auto-commit（上游）：https://github.com/0xkaz/claude-auto-commit
+
+贡献者如需在上游同步相关议题或提交 PR，欢迎参考上游仓库的贡献流程；本仓库会定期跟进上游更新。
 - Create a new issue with the "question" template
 - Join discussions in the repository
 

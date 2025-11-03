@@ -7,10 +7,9 @@
 🤖 **AI-powered Git commit message generator using Claude Code SDK**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub release](https://img.shields.io/github/release/0xkaz/claude-auto-commit.svg)](https://github.com/0xkaz/claude-auto-commit/releases)
-[![npm version](https://img.shields.io/npm/v/claude-auto-commit.svg)](https://www.npmjs.com/package/claude-auto-commit)
-[![GitHub stars](https://img.shields.io/github/stars/0xkaz/claude-auto-commit.svg)](https://github.com/0xkaz/claude-auto-commit/stargazers)
-[![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Linux-blue.svg)](https://github.com/0xkaz/claude-auto-commit)
+[![GitHub release](https://img.shields.io/github/release/ticoAg/claude-auto-commit.svg)](https://github.com/ticoAg/claude-auto-commit/releases)
+[![GitHub stars](https://img.shields.io/github/stars/ticoAg/claude-auto-commit.svg)](https://github.com/ticoAg/claude-auto-commit/stargazers)
+[![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Linux-blue.svg)](https://github.com/ticoAg/claude-auto-commit)
 [![Node.js](https://img.shields.io/badge/Node.js-22%2B-green.svg)](https://nodejs.org)
 [![Claude Code SDK](https://img.shields.io/badge/Powered%20by-Claude%20Code%20SDK-orange.svg)](https://docs.anthropic.com/en/docs/claude-code)
 
@@ -42,24 +41,24 @@ Claude Auto-Commit is an open-source command-line tool that integrates AI-powere
 
 ### Installation Options
 
-**Method 1: NPX execution (recommended, no installation needed)**
+**Method 1: Script installation (this repository, recommended)**
+```bash
+curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/install.sh | bash
+```
+
+**Method 2: One-time script execution (this repository)**
+```bash
+curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/run-once.sh | bash
+```
+
+**Method 3: NPX (fallback)**
 ```bash
 npx claude-auto-commit
 ```
 
-**Method 2: NPM global installation**
+**Method 4: NPM global installation (fallback)**
 ```bash
 npm install -g claude-auto-commit
-```
-
-**Method 3: Script installation**
-```bash
-curl -fsSL https://raw.githubusercontent.com/0xkaz/claude-auto-commit/main/scripts/install.sh | bash
-```
-
-**Method 4: One-time script execution**
-```bash
-curl -fsSL https://raw.githubusercontent.com/0xkaz/claude-auto-commit/main/scripts/run-once.sh | bash
 ```
 
 ### Basic Usage
@@ -139,21 +138,25 @@ claude-auto-commit --update
 
 ### Method 1: One-liner (Recommended)
 ```bash
-curl -fsSL https://claude-auto-commit.0xkaz.com/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/install.sh | bash
 ```
 
 ### Method 2: Manual Download
 ```bash
 # Download for your platform
-curl -L -o claude-auto-commit https://github.com/0xkaz/claude-auto-commit/releases/latest/download/claude-auto-commit-$(uname -s)-$(uname -m)
+curl -L -o claude-auto-commit https://github.com/ticoAg/claude-auto-commit/releases/latest/download/claude-auto-commit-$(uname -s)-$(uname -m)
 chmod +x claude-auto-commit
 sudo mv claude-auto-commit /usr/local/bin/
 ```
 
-### Method 3: NPX (Node.js users)
+### Method 3: NPX (Node.js users, fallback)
 ```bash
 npx claude-auto-commit@latest
 ```
+
+## Update Log
+
+- v0.1.5 (2025-11-03): Switch default installation to this fork repository scripts; remove NPM badge; add Upstream section in main README; align package.json metadata.
 
 ## ⚙️ Configuration
 
@@ -263,4 +266,4 @@ This project is licensed under the MIT License - see the [LICENSE](../../LICENSE
 
 **Made with ❤️ for the developer community**
 
-[Report Issues](https://github.com/0xkaz/claude-auto-commit/issues) | [Request Features](https://github.com/0xkaz/claude-auto-commit/issues/new?template=feature_request.md)
+[Report Issues](https://github.com/ticoAg/claude-auto-commit/issues) | [Request Features](https://github.com/ticoAg/claude-auto-commit/issues/new?template=feature_request.md)

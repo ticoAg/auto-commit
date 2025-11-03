@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.5] - 2025-11-03
+
+### 新增
+
+- ✅ 支持 `-l zh` 参数生成中文提交信息，帮助文本与配置示例同步更新为三语说明。
+
+### 修复
+
+- 🛠️ 仓库无改动时输出中文提示，`--verbose` 模式新增携带 `trace_id` 的结构化日志，避免静默退出。
+
+### 变更
+
+- 🔄 统一 CLI 版本号展示为 v0.1.5，确保 bin 与核心脚本信息一致。
+- 📦 安装方案调整：默认推荐使用本仓库脚本（install.sh / run-once.sh）进行安装与临时执行，保留 NPX/NPM 作为备用方式。
+- 📚 文档优化：
+  - 重排 README 及多语言文档的安装顺序（优先本仓库脚本）。
+  - 移除 NPM 徽章，避免误导优先安装渠道。
+  - 新增 README “上游仓库（Upstream）” 说明，保留并致谢原始仓库 0xkaz/claude-auto-commit。
+- 🧭 元数据对齐：同步 package.json 的 repository/bugs/homepage 指向本仓库。
+
 ## [0.1.0] - 2025-06-14
 
 ### 🎉 Major Version Update: CLI to SDK Migration
@@ -12,9 +32,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 This release marks a significant architectural shift from Claude CLI dependency to Claude Code SDK integration, providing improved performance, reliability, and extensibility.
 
 ### Added
+
 - ✨ Full Claude Code SDK integration (replaces CLI dependency)
 - 📝 Enhanced template support for saving and reusing commit messages
-- ⚙️  Configuration file support (~/.claude-auto-commit/config.json)
+- ⚙️ Configuration file support (~/.claude-auto-commit/config.json)
 - 🔄 Retry mechanism with exponential backoff
 - 🚀 Auto-push functionality
 - 📊 Verbose logging and performance metrics
@@ -23,10 +44,11 @@ This release marks a significant architectural shift from Claude CLI dependency 
 - 📋 Conventional Commits format support
 - 🔧 One-liner installer and runner scripts
 - ⚡ Performance optimizations (parallel processing, caching)
-- 🛡️  Enhanced error handling and resilience
+- 🛡️ Enhanced error handling and resilience
 - 📦 NPM package support for global installation
 
 ### Changed
+
 - **BREAKING**: Migrated from Claude CLI to Claude Code SDK
 - **BREAKING**: Node.js 22.0.0+ now required (upgraded from 16.0.0+)
 - **BREAKING**: Main script changed from `.sh` to `.js` (src/claude-auto-commit.js)
@@ -36,6 +58,7 @@ This release marks a significant architectural shift from Claude CLI dependency 
 - Updated installation process for SDK dependencies
 
 ### Technical Details
+
 - Dependencies: @anthropic-ai/claude-code ^1.0.22
 - Runtime: Node.js 22.0.0+ with ES modules support
 - Architecture: Full JavaScript/TypeScript implementation
@@ -43,25 +66,29 @@ This release marks a significant architectural shift from Claude CLI dependency 
 - NPM: Available as both global CLI and local package
 
 ### Migration from v0.0.5
+
 All core features from the CLI-based v0.0.5 are maintained with significant improvements:
+
 - Backward compatible command-line interface
 - Enhanced reliability and error handling
 - Better performance and user experience
 - Extended functionality with templates and configuration
 
 ### Installation Options
+
 ```bash
 # Method 1: One-liner installation (recommended)
-curl -fsSL https://raw.githubusercontent.com/0xkaz/claude-auto-commit/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/install.sh | bash
 
 # Method 2: NPM global installation
 npm install -g claude-auto-commit
 
 # Method 3: One-time execution (no installation)
-curl -fsSL https://raw.githubusercontent.com/0xkaz/claude-auto-commit/main/scripts/run-once.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/run-once.sh | bash
 ```
 
 ### Usage Examples
+
 ```bash
 # Basic usage
 claude-auto-commit
@@ -80,17 +107,20 @@ claude-auto-commit --template my-template
 ```
 
 ### Configuration
+
 Create `~/.claude-auto-commit/config.json`:
+
 ```json
 {
-  "language": "ja",
-  "useEmoji": true,
-  "conventionalCommit": true,
-  "verbose": false
+    "language": "ja",
+    "useEmoji": true,
+    "conventionalCommit": true,
+    "verbose": false
 }
 ```
 
 ### Requirements
+
 - Node.js 22.0.0 or later
 - Claude Code SDK (automatically installed)
 - Git repository
@@ -99,49 +129,54 @@ Create `~/.claude-auto-commit/config.json`:
 ## [0.0.5] - 2024-06-13
 
 ### Added
+
 - **Template System** for saving and reusing commit message patterns
-  - `--save-template <name> "<template>"` to save a template
-  - `--template <name>` or `-T <name>` to use a saved template
-  - `--list-templates` to show all saved templates
-  - `--delete-template <name>` to remove a template
+    - `--save-template <name> "<template>"` to save a template
+    - `--template <name>` or `-T <name>` to use a saved template
+    - `--list-templates` to show all saved templates
+    - `--delete-template <name>` to remove a template
 - **Smart placeholders** in templates using `{variable}` syntax
-  - Prompts for values when using templates with placeholders
-  - Supports multiple placeholders in a single template
-  - Example: `🔥 HOTFIX: {description} - fixes {issue}`
+    - Prompts for values when using templates with placeholders
+    - Supports multiple placeholders in a single template
+    - Example: `🔥 HOTFIX: {description} - fixes {issue}`
 - Templates stored in `~/.claude-auto-commit/templates/`
 
 ## [0.0.4] - 2024-06-13
 
 ### Added
+
 - `--smart-group` flag to analyze and group related files for logical commits
-  - Detects frontend, backend, tests, docs, config, and style files
-  - Shows file categories and statistics
-  - Supports verbose mode for detailed file listings
+    - Detects frontend, backend, tests, docs, config, and style files
+    - Shows file categories and statistics
+    - Supports verbose mode for detailed file listings
 - `--analyze-history` command to learn from commit history
-  - Analyzes emoji usage patterns
-  - Calculates average commit message length
-  - Detects common commit prefixes
-  - Identifies language preferences
-  - Saves results to `~/.claude-auto-commit/commit-style.yml`
+    - Analyzes emoji usage patterns
+    - Calculates average commit message length
+    - Detects common commit prefixes
+    - Identifies language preferences
+    - Saves results to `~/.claude-auto-commit/commit-style.yml`
 - `--style learned` option to apply learned commit patterns
-  - Uses analyzed emoji usage percentage
-  - Targets learned average message length
-  - Automatically enables emoji if usage > 50%
+    - Uses analyzed emoji usage percentage
+    - Targets learned average message length
+    - Automatically enables emoji if usage > 50%
 
 ### Fixed
+
 - macOS compatibility for grep commands (removed -P flag)
 - Bash 3.x compatibility (removed associative arrays)
 
 ## [0.0.3] - 2024-06-13
 
 ### Added
+
 - `--dry-run` flag for generating commit messages without committing
 - `--summary` flag for displaying detailed change statistics
-  - File-by-file statistics
-  - Lines added/deleted count
-  - File type breakdown
+    - File-by-file statistics
+    - Lines added/deleted count
+    - File type breakdown
 
 ### Changed
+
 - **BREAKING**: Changed default interface language from Japanese to English
 - All system messages, prompts, and outputs now default to English
 - Help text and usage information displayed in English
@@ -150,26 +185,31 @@ Create `~/.claude-auto-commit/config.json`:
 - Improved change summary display with emoji indicators
 
 ### Fixed
+
 - Consistent language experience for international users
 - Better compatibility with global development teams
 
 ## [0.0.2] - 2024-06-13
 
 ### Added
+
 - Push confirmation prompt before pushing to remote repository
 - `-y` / `--yes` flag to skip push confirmation
 - CHANGELOG.md file
 
 ### Changed
+
 - Default behavior now asks for confirmation before pushing
 - Updated documentation to reflect new push confirmation feature
 
 ### Security
+
 - Prevents accidental pushes to remote repository
 
 ## [0.0.1] - 2024-06-13
 
 ### Added
+
 - Initial release
 - AI-powered commit message generation using Claude CLI
 - Multi-language support (English, Japanese, Chinese)

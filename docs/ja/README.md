@@ -7,10 +7,9 @@
 🤖 **Claude Code SDKを使用したAI駆動のGitコミットメッセージ生成ツール**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub release](https://img.shields.io/github/release/0xkaz/claude-auto-commit.svg)](https://github.com/0xkaz/claude-auto-commit/releases)
-[![npm version](https://img.shields.io/npm/v/claude-auto-commit.svg)](https://www.npmjs.com/package/claude-auto-commit)
-[![GitHub stars](https://img.shields.io/github/stars/0xkaz/claude-auto-commit.svg)](https://github.com/0xkaz/claude-auto-commit/stargazers)
-[![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Linux-blue.svg)](https://github.com/0xkaz/claude-auto-commit)
+[![GitHub release](https://img.shields.io/github/release/ticoAg/claude-auto-commit.svg)](https://github.com/ticoAg/claude-auto-commit/releases)
+[![GitHub stars](https://img.shields.io/github/stars/ticoAg/claude-auto-commit.svg)](https://github.com/ticoAg/claude-auto-commit/stargazers)
+[![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Linux-blue.svg)](https://github.com/ticoAg/claude-auto-commit)
 [![Node.js](https://img.shields.io/badge/Node.js-22%2B-green.svg)](https://nodejs.org)
 [![Claude Code SDK](https://img.shields.io/badge/Powered%20by-Claude%20Code%20SDK-orange.svg)](https://docs.anthropic.com/en/docs/claude-code)
 
@@ -42,24 +41,24 @@ Claude Auto-Commitは、AI駆動のコミットメッセージ生成をGitワー
 
 ### インストール方法
 
-**方法1: NPX実行（推奨、インストール不要）**
+**方法1: スクリプトインストール（本リポジトリ・推奨）**
+```bash
+curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/install.sh | bash
+```
+
+**方法2: ワンタイムスクリプト実行（本リポジトリ）**
+```bash
+curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/run-once.sh | bash
+```
+
+**方法3: NPX（フォールバック）**
 ```bash
 npx claude-auto-commit
 ```
 
-**方法2: NPMグローバルインストール**
+**方法4: NPM グローバルインストール（フォールバック）**
 ```bash
 npm install -g claude-auto-commit
-```
-
-**方法3: スクリプトインストール**
-```bash
-curl -fsSL https://raw.githubusercontent.com/0xkaz/claude-auto-commit/main/scripts/install.sh | bash
-```
-
-**方法4: ワンタイムスクリプト実行**
-```bash
-curl -fsSL https://raw.githubusercontent.com/0xkaz/claude-auto-commit/main/scripts/run-once.sh | bash
 ```
 
 ### 基本的な使い方
@@ -139,18 +138,18 @@ claude-auto-commit --update
 
 ### 方法1: ワンライナー（推奨）
 ```bash
-curl -fsSL https://claude-auto-commit.0xkaz.com/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/install.sh | bash
 ```
 
 ### 方法2: 手動ダウンロード
 ```bash
 # プラットフォーム用にダウンロード
-curl -L -o claude-auto-commit https://github.com/0xkaz/claude-auto-commit/releases/latest/download/claude-auto-commit-$(uname -s)-$(uname -m)
+curl -L -o claude-auto-commit https://github.com/ticoAg/claude-auto-commit/releases/latest/download/claude-auto-commit-$(uname -s)-$(uname -m)
 chmod +x claude-auto-commit
 sudo mv claude-auto-commit /usr/local/bin/
 ```
 
-### 方法3: NPX（Node.jsユーザー向け）
+### 方法3: NPX（Node.jsユーザー向け・フォールバック）
 ```bash
 npx claude-auto-commit@latest
 ```
@@ -233,4 +232,4 @@ Claude AIがコード変更を分析し、以下を考慮してメッセージ�
 
 **開発者コミュニティへの愛を込めて ❤️**
 
-[問題を報告](https://github.com/0xkaz/claude-auto-commit/issues) | [機能要求](https://github.com/0xkaz/claude-auto-commit/issues/new?template=feature_request.md)
+[問題を報告](https://github.com/ticoAg/claude-auto-commit/issues) | [機能要求](https://github.com/ticoAg/claude-auto-commit/issues/new?template=feature_request.md)

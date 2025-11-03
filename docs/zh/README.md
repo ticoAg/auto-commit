@@ -7,10 +7,9 @@
 🤖 **使用Claude Code SDK的AI驱动Git提交消息生成器**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub release](https://img.shields.io/github/release/0xkaz/claude-auto-commit.svg)](https://github.com/0xkaz/claude-auto-commit/releases)
-[![npm version](https://img.shields.io/npm/v/claude-auto-commit.svg)](https://www.npmjs.com/package/claude-auto-commit)
-[![GitHub stars](https://img.shields.io/github/stars/0xkaz/claude-auto-commit.svg)](https://github.com/0xkaz/claude-auto-commit/stargazers)
-[![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Linux-blue.svg)](https://github.com/0xkaz/claude-auto-commit)
+[![GitHub release](https://img.shields.io/github/release/ticoAg/claude-auto-commit.svg)](https://github.com/ticoAg/claude-auto-commit/releases)
+[![GitHub stars](https://img.shields.io/github/stars/ticoAg/claude-auto-commit.svg)](https://github.com/ticoAg/claude-auto-commit/stargazers)
+[![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Linux-blue.svg)](https://github.com/ticoAg/claude-auto-commit)
 [![Node.js](https://img.shields.io/badge/Node.js-22%2B-green.svg)](https://nodejs.org)
 [![Claude Code SDK](https://img.shields.io/badge/Powered%20by-Claude%20Code%20SDK-orange.svg)](https://docs.anthropic.com/en/docs/claude-code)
 
@@ -34,19 +33,24 @@ Claude Auto-Commit是一个开源命令行工具，将AI驱动的提交消息生
 
 ### 安装选项
 
-**方法1：一键安装（推荐）**
+**方法1：一键安装（本仓库，推荐）**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/0xkaz/claude-auto-commit/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/install.sh | bash
 ```
 
-**方法2：NPM全局安装**
+**方法2：一次性执行（本仓库）**
+```bash
+curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/run-once.sh | bash
+```
+
+**方法3：NPX（备用）**
+```bash
+npx claude-auto-commit
+```
+
+**方法4：NPM 全局安装（备用）**
 ```bash
 npm install -g claude-auto-commit
-```
-
-**方法3：一次性执行（无需安装）**
-```bash
-curl -fsSL https://raw.githubusercontent.com/0xkaz/claude-auto-commit/main/scripts/run-once.sh | bash
 ```
 
 ### 基本用法
@@ -116,21 +120,25 @@ claude-auto-commit --update
 
 ### 方法1: 一键安装（推荐）
 ```bash
-curl -fsSL https://claude-auto-commit.0xkaz.com/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/install.sh | bash
 ```
 
 ### 方法2: 手动下载
 ```bash
 # 为您的平台下载
-curl -L -o claude-auto-commit https://github.com/0xkaz/claude-auto-commit/releases/latest/download/claude-auto-commit-$(uname -s)-$(uname -m)
+curl -L -o claude-auto-commit https://github.com/ticoAg/claude-auto-commit/releases/latest/download/claude-auto-commit-$(uname -s)-$(uname -m)
 chmod +x claude-auto-commit
 sudo mv claude-auto-commit /usr/local/bin/
 ```
 
-### 方法3: NPX（Node.js用户）
+### 方法3: NPX（Node.js用户，备用）
 ```bash
 npx claude-auto-commit@latest
 ```
+
+## 更新记录
+
+- v0.1.5（2025-11-03）：默认安装切换为本仓库脚本；移除 NPM 徽章；在主仓库 README 新增上游仓库说明；同步 package.json 元数据。
 
 ## ⚙️ 配置
 
@@ -210,4 +218,4 @@ Claude AI分析代码更改并考虑以下因素生成消息：
 
 **为开发者社区倾情打造 ❤️**
 
-[报告问题](https://github.com/0xkaz/claude-auto-commit/issues) | [功能请求](https://github.com/0xkaz/claude-auto-commit/issues/new?template=feature_request.md)
+[报告问题](https://github.com/ticoAg/claude-auto-commit/issues) | [功能请求](https://github.com/ticoAg/claude-auto-commit/issues/new?template=feature_request.md)
