@@ -29,3 +29,11 @@
 - provider：`zh-CN` / `en-US` / `ja` README 增加 Codex/Provider 说明、配置示例与命令选项。
 - 安装：所有脚本/指南中的 `npx`、`npm install` 命令改为 `@ticoag/auto-commit`，curl 链接指向新仓库。
 - Release：更新 `docs/publish` 模板与公告模版（announcement-template），对外文案改为 AutoCommit。
+
+## 0.4.0（2025-11-21）
+
+- 新增：Codex 通道（@openai/codex-sdk），可在 CLI 中切换 provider
+- 新增：项目品牌更名为 AutoCommit，默认命令改为 `auto-commit`
+- 优化：配置与模板目录切换至 ~/.auto-commit，仍兼容旧路径
+- 文档：README 与多语言指南同步更新，包含新的安装与发布说明
+- 兼容性：保留 `claude-auto-commit` 命令的向后兼容别名

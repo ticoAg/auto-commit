@@ -299,3 +299,11 @@ Create `~/.claude-auto-commit/config.json`:
 - 改进：verbose 分段日志（含 trace_id）
 - 改进：提交信息以等号分隔块高亮显示，去除外层引号
 - 兼容性：无破坏性改动
+
+## 0.4.0（2025-11-21）
+
+- 新增：Codex 通道（@openai/codex-sdk），可在 CLI 中切换 provider
+- 新增：项目品牌更名为 AutoCommit，默认命令改为 `auto-commit`
+- 优化：配置与模板目录切换至 ~/.auto-commit，仍兼容旧路径
+- 文档：README 与多语言指南同步更新，包含新的安装与发布说明
+- 兼容性：保留 `claude-auto-commit` 命令的向后兼容别名
