@@ -7,6 +7,7 @@
  *  - 仅对注释与文档进行增强，保持对外行为与 CLI 参数兼容，不改动核心逻辑。
  */
 import { query } from "@anthropic-ai/claude-code";
+import { Codex } from "@openai/codex-sdk";
 import { exec } from "child_process";
 import { promisify } from "util";
 import fs from "fs/promises";
@@ -24,15 +25,16 @@ const CLI_VERSION = `v${pkg.version}`;
 const execAsync = promisify(exec);
 
 /**
- * ClaudeAutoCommit
+ * AutoCommit
  *
  * 中文类注释：封装“配置读取 → 变更感知 → 提示词构造 → 文本生成 → 提交/推送”的主流程。
  * - 可通过构造参数或配置文件覆盖默认行为；
  * - 运行期维护轻量级缓存（_gitCache/_configCache），减少重复 IO；
  * - 发生错误时抛出具备中文语义的异常信息，便于最终用户理解。
  */
-class ClaudeAutoCommit {
+class AutoCommit {
 	constructor(options = {}) {
+		this._cliOptions = { ...options };
 		this.language = options.language || "en";
 		this.useEmoji = options.useEmoji || false;
 		this.conventionalCommit = options.conventionalCommit || false;
@@ -44,16 +46,25 @@ class ClaudeAutoCommit {
 		this.maxRetries = options.maxRetries || 3;
 		this.timeout = options.timeout || 30000;
 		this.traceId = options.traceId || randomUUID();
+		const provider = (options.provider || "claude").toString().toLowerCase();
+		this.provider = provider === "codex" ? "codex" : "claude";
+		this.codexModel = options.codexModel || "";
+		this.codexExecutablePath = options.codexPath || null;
+		this._codexClient = null;
 		// 缓存：Git 命令结果，避免在单次运行内重复执行
 		this._gitCache = {};
 		// 缓存：配置文件内容，减少频繁文件读取
 		this._configCache = null;
 		this._configCacheTime = 0;
 		this.CONFIG_CACHE_TTL = 5 * 60 * 1000; // 配置缓存 5 分钟
-			// 记录系统上已安装的 `claude` 可执行入口路径（在预检或配置读取时赋值）
-			this.claudeExecutablePath = null;
-			// 是否在提交信息末尾附加来源标识，默认开启
-			this.appendSignature = true;
+		// 记录系统上已安装的 `claude` 可执行入口路径（在预检或配置读取时赋值）
+		this.claudeExecutablePath = null;
+		// 是否在提交信息末尾附加来源标识，默认开启
+		this.appendSignature = true;
+		// 配置目录（优先使用 AutoCommit 新路径）
+		this.primaryConfigDir = path.join(os.homedir(), ".auto-commit");
+		this.legacyConfigDir = path.join(os.homedir(), ".claude-auto-commit");
+		this.activeConfigDir = this.primaryConfigDir;
 		}
 
 		// 轻量打印工具：分段标题（仅 verbose 下生效）
@@ -65,9 +76,9 @@ class ClaudeAutoCommit {
 
 		// 将提交信息以清晰的分隔块打印（所有模式下都生效）
 		printCommitBlock(message) {
+			console.log("生成的提交信息");
 			const line = "=".repeat(64);
 			console.log(`\n${line}`);
-			console.log("生成的提交信息");
 			console.log("");
 			console.log(message);
 			console.log(line);
@@ -90,7 +101,6 @@ class ClaudeAutoCommit {
 
 	async loadConfig() {
 		try {
-			// 优先从缓存返回，避免频繁 IO
 			const now = Date.now();
 			if (
 				this._configCache &&
@@ -101,50 +111,102 @@ class ClaudeAutoCommit {
 				}
 				return this._configCache;
 			}
-			// 配置查找：仅支持 YAML（~/.claude-auto-commit/config.yml）
-			const configDir = path.join(os.homedir(), ".claude-auto-commit");
-			const yamlPath = path.join(configDir, "config.yml");
 
-			const yamlExists = await fs
-				.access(yamlPath)
-				.then(() => true)
-				.catch(() => false);
+			const candidates = [
+				{ dir: this.primaryConfigDir, label: "primary" },
+				{ dir: this.legacyConfigDir, label: "legacy" },
+			];
 
 			let config = null;
 			let source = "default";
 
-			if (yamlExists) {
-				// 读取 YAML 配置
+			for (const candidate of candidates) {
+				const yamlPath = path.join(candidate.dir, "config.yml");
+				const exists = await fs
+					.access(yamlPath)
+					.then(() => true)
+					.catch(() => false);
+				if (!exists) {
+					continue;
+				}
 				try {
 					const content = await fs.readFile(yamlPath, "utf8");
 					config = YAML.parse(content) || {};
 					source = yamlPath;
+					this.activeConfigDir = candidate.dir;
+					if (
+						candidate.label === "legacy" &&
+						this.verbose
+					) {
+						console.log(
+							"ℹ️ 检测到 ~/.claude-auto-commit 配置，建议迁移到 ~/.auto-commit。"
+						);
+					}
+					break;
 				} catch (e) {
-					console.log(`⚠️  无法解析 YAML 配置（${yamlPath}）：${e.message}，将使用默认配置。`);
+					console.log(
+						`⚠️  无法解析 YAML 配置（${yamlPath}）：${e.message}，将继续尝试其他目录。`
+					);
 				}
 			}
 
+			if (!config) {
+				this.activeConfigDir = this.primaryConfigDir;
+			}
 
 			if (config) {
-				// 缓存配置
 				this._configCache = config;
 				this._configCacheTime = now;
 
-				// 从配置文件应用默认值（字段名与 README 对齐）
-				this.language = this.language || config.language || "en";
-				this.useEmoji = this.useEmoji || config.useEmoji || false;
-				this.conventionalCommit =
-					this.conventionalCommit || config.conventionalCommit || false;
-				this.verbose = this.verbose || config.verbose || false;
+				const cli = this._cliOptions || {};
 
-				// 可选：强制指定全局 `claude` 可执行路径
+				if (cli.language === undefined && config.language) {
+					this.language = config.language;
+				}
+				if (cli.useEmoji === undefined && typeof config.useEmoji === "boolean") {
+					this.useEmoji = config.useEmoji;
+				}
+				if (
+					cli.conventionalCommit === undefined &&
+					typeof config.conventionalCommit === "boolean"
+				) {
+					this.conventionalCommit = config.conventionalCommit;
+				}
+				if (cli.commitType === undefined && typeof config.commitType === "string") {
+					this.commitType = config.commitType;
+					if (config.commitType) {
+						this.conventionalCommit = true;
+					}
+				}
+				if (cli.verbose === undefined && typeof config.verbose === "boolean") {
+					this.verbose = config.verbose;
+				}
+				if (cli.push === undefined && typeof config.push === "boolean") {
+					this.push = config.push;
+				}
+				if (cli.templateName === undefined && typeof config.templateName === "string") {
+					this.templateName = config.templateName;
+				}
+				if (cli.provider === undefined && typeof config.provider === "string") {
+					const normalized = config.provider.toLowerCase();
+					this.provider = normalized === "codex" ? "codex" : "claude";
+				}
 				if (typeof config.claudePath === "string" && config.claudePath.trim()) {
 					this.claudeExecutablePath = config.claudePath.trim();
 				}
-				// 可选：是否在提交信息末尾附加标识（默认 true）
+				if (typeof config.codexPath === "string" && config.codexPath.trim()) {
+					this.codexExecutablePath = config.codexPath.trim();
+				}
+				if (typeof config.codexModel === "string" && config.codexModel.trim()) {
+					this.codexModel = config.codexModel.trim();
+				}
 				if (typeof config.appendSignature === "boolean") {
 					this.appendSignature = config.appendSignature;
 				}
+
+				this.language = this.language || "en";
+				this.useEmoji = Boolean(this.useEmoji);
+				this.conventionalCommit = Boolean(this.conventionalCommit);
 
 				if (this.verbose) {
 					console.log("📄 Configuration loaded from:", source);
@@ -159,11 +221,27 @@ class ClaudeAutoCommit {
 		return null;
 	}
 
+	getCodexClient() {
+		if (!this._codexClient) {
+			const options = {};
+			if (this.codexExecutablePath) {
+				options.codexPathOverride = this.codexExecutablePath;
+			}
+			if (process.env.CODEX_BASE_URL) {
+				options.baseUrl = process.env.CODEX_BASE_URL;
+			}
+			if (process.env.CODEX_API_KEY) {
+				options.apiKey = process.env.CODEX_API_KEY;
+			}
+			this._codexClient = new Codex(options);
+		}
+		return this._codexClient;
+	}
+
 	async saveTemplate(name, message) {
 		try {
 			const templatesDir = path.join(
-				os.homedir(),
-				".claude-auto-commit",
+				this.primaryConfigDir,
 				"templates"
 			);
 			await fs.mkdir(templatesDir, { recursive: true });
@@ -179,30 +257,60 @@ class ClaudeAutoCommit {
 
 	async loadTemplate(name) {
 		try {
-			const templatePath = path.join(
-				os.homedir(),
-				".claude-auto-commit",
-				"templates",
-				`${name}.txt`
-			);
-			const template = await fs.readFile(templatePath, "utf8");
-			return template.trim();
+			const dirs = [
+				this.primaryConfigDir,
+				this.legacyConfigDir !== this.primaryConfigDir
+					? this.legacyConfigDir
+					: null,
+			].filter(Boolean);
+
+			for (const dir of dirs) {
+				const templatePath = path.join(dir, "templates", `${name}.txt`);
+				try {
+					const template = await fs.readFile(templatePath, "utf8");
+					return template.trim();
+				} catch {
+					continue;
+				}
+			}
+			throw new Error("not_found");
 		} catch (error) {
-			throw new Error(`Template "${name}" not found`);
+			if (error.message === "not_found") {
+				throw new Error(`Template "${name}" not found`);
+			}
+			throw error;
 		}
 	}
 
 	async listTemplates() {
 		try {
-			const templatesDir = path.join(
-				os.homedir(),
-				".claude-auto-commit",
-				"templates"
-			);
-			const files = await fs.readdir(templatesDir);
-			return files
-				.filter((f) => f.endsWith(".txt"))
-				.map((f) => f.replace(".txt", ""));
+			const seen = new Set();
+			const all = [];
+			const dirs = [
+				this.primaryConfigDir,
+				this.legacyConfigDir !== this.primaryConfigDir
+					? this.legacyConfigDir
+					: null,
+			].filter(Boolean);
+
+			for (const dir of dirs) {
+				try {
+					const templatesDir = path.join(dir, "templates");
+					const files = await fs.readdir(templatesDir);
+					files
+						.filter((f) => f.endsWith(".txt"))
+						.map((f) => f.replace(".txt", ""))
+						.forEach((name) => {
+							if (!seen.has(name)) {
+								seen.add(name);
+								all.push(name);
+							}
+						});
+				} catch {
+					continue;
+				}
+			}
+			return all;
 		} catch (error) {
 			return [];
 		}
@@ -343,6 +451,13 @@ class ClaudeAutoCommit {
 	}
 
 	async generateCommitMessage(changes) {
+		if (this.provider === "codex") {
+			return await this.generateCommitMessageWithCodex(changes);
+		}
+		return await this.generateCommitMessageWithClaude(changes);
+	}
+
+	async generateCommitMessageWithClaude(changes) {
 		/**
 		 * 中文说明：调用 Claude Code SDK 生成提交信息。
 		 * - 输入：变更文本片段（由 getGitChanges() 产生）；
@@ -463,6 +578,84 @@ class ClaudeAutoCommit {
 		}
 	}
 
+	async generateCommitMessageWithCodex(changes) {
+		const prompt = this.buildPrompt(changes);
+		for (let attempt = 1; attempt <= this.maxRetries; attempt++) {
+			try {
+				if (this.verbose) {
+					console.log(
+						`🤖 Codex generating commit message (attempt ${attempt}/${this.maxRetries})...`
+					);
+				}
+
+				const codex = this.getCodexClient();
+				const thread = codex.startThread({
+					workingDirectory: process.cwd(),
+					skipGitRepoCheck: true,
+					model: this.codexModel || undefined,
+				});
+				const abortController = new AbortController();
+				const timeoutId = setTimeout(() => abortController.abort(), this.timeout);
+				const turn = await thread.run(prompt, { signal: abortController.signal });
+				clearTimeout(timeoutId);
+
+				if (this.verbose && turn.usage) {
+					console.log(
+						`✅ Codex 完成: tokens_in=${turn.usage?.input_tokens ?? 0}, tokens_out=${
+							turn.usage?.output_tokens ?? 0
+						}`
+					);
+				}
+
+				const message = this.extractMessageFromCodexTurn(turn);
+				if (message) {
+					return message;
+				}
+
+				throw new Error("No valid response received from Codex");
+			} catch (error) {
+				if (error.name === "AbortError") {
+					console.log(`⏱️  Codex attempt ${attempt} timed out`);
+				} else {
+					console.log(`❌ Codex attempt ${attempt} failed: ${error.message}`);
+				}
+
+				if (attempt === this.maxRetries) {
+					throw new Error(
+						`Failed to generate commit message via Codex after ${this.maxRetries} attempts: ${error.message}`
+					);
+				}
+
+				const delay = Math.min(1000 * Math.pow(2, attempt - 1), 10000);
+				console.log(`⏳ Codex retrying in ${delay}ms...`);
+				await new Promise((resolve) => setTimeout(resolve, delay));
+			}
+		}
+	}
+
+	extractMessageFromCodexTurn(turn) {
+		if (!turn) return "";
+		if (typeof turn.finalResponse === "string" && turn.finalResponse.trim()) {
+			return turn.finalResponse.trim();
+		}
+		if (Array.isArray(turn.items)) {
+			for (const item of turn.items) {
+				if (item && typeof item.text === "string" && item.text.trim()) {
+					return item.text.trim();
+				}
+				if (
+					item &&
+					item.type === "agent_message" &&
+					typeof item.content === "string" &&
+					item.content.trim()
+				) {
+					return item.content.trim();
+				}
+			}
+		}
+		return "";
+	}
+
 	buildPrompt(changes) {
 		/**
 		 * 中文说明：优化后的提示词构造
@@ -511,10 +704,10 @@ class ClaudeAutoCommit {
 		return prompt;
 	}
 
-	/**
-	 * 检查是否可通过 `claude` 命令启动
-	 * 仅做可执行性校验，不检查安装来源或详细配置。
-	 */
+    /**
+     * 检查是否可通过 `claude` 命令启动
+     * 仅做可执行性校验，不检查安装来源或详细配置。
+     */
     async checkClaudeCommand() {
         /**
          * 中文说明：解析并校验 `claude` 可执行程序路径。
@@ -554,6 +747,23 @@ class ClaudeAutoCommit {
             );
         }
     }
+
+	async checkCodexEnvironment() {
+		try {
+			this.getCodexClient();
+			if (this.verbose) {
+				const source = this.codexExecutablePath
+					? this.codexExecutablePath
+					: "bundled";
+				console.log(`🧪 检查: Codex CLI 可用，来源: ${source}`);
+			}
+			return true;
+		} catch (error) {
+			throw new Error(
+				`未检测到可用的 Codex CLI。请确保已安装依赖并通过 codex login 完成鉴权：${error.message}`
+			);
+		}
+	}
 
 	async stageAllChanges() {
 		try {
@@ -622,18 +832,21 @@ class ClaudeAutoCommit {
 
 		try {
 			console.log(
-				`🚀 Claude Auto Commit（SDK 版本 ${CLI_VERSION}，trace_id=${this.traceId})`
+				`🚀 AutoCommit（SDK 版本 ${CLI_VERSION}，trace_id=${this.traceId})`
 			);
 
 			// 并行执行：配置读取 + Git 仓库检测 + `claude` 命令可用性校验
-			const [config] = await this.measure(
-				"Config, Git & Claude check",
+			await this.measure(
+				"Config, Git & provider check",
 				async () => {
-					return await Promise.all([
-						this.loadConfig(),
-						this.checkGitRepository(),
-						this.checkClaudeCommand(),
-					]);
+					const tasks = [this.loadConfig(), this.checkGitRepository()];
+					if (this.provider === "claude") {
+						tasks.push(this.checkClaudeCommand());
+					} else {
+						tasks.push(this.checkCodexEnvironment());
+					}
+					const [cfg] = await Promise.all(tasks);
+					return cfg;
 				}
 			);
 
@@ -672,7 +885,9 @@ class ClaudeAutoCommit {
 			);
 
 			if (this.verbose) {
-				console.log("🔍 Analyzing changes with Claude Code SDK...");
+				const engine =
+					this.provider === "codex" ? "Codex CLI" : "Claude Code SDK";
+				console.log(`🔍 Analyzing changes with ${engine}...`);
 			}
 
 			// テンプレート使用の場合
@@ -696,7 +911,7 @@ class ClaudeAutoCommit {
 
 				// 根据配置在消息末尾增加来源标识（避免重复追加）
 				if (this.appendSignature) {
-					const signature = "auto generated by @ticoag/claude-auto-commit";
+					const signature = "auto generated by @ticoag/auto-commit";
 					const trimmed = commitMessage.trimEnd();
 					if (!trimmed.endsWith(signature)) {
 						commitMessage = `${trimmed}\n\n${signature}`;
@@ -789,12 +1004,24 @@ function parseArgs() {
 			case "--template":
 				options.templateName = args[++i];
 				break;
+			case "--provider":
+				options.provider = args[++i];
+				break;
+			case "--codex":
+				options.provider = "codex";
+				break;
+			case "--claude":
+				options.provider = "claude";
+				break;
+			case "--codex-model":
+				options.codexModel = args[++i];
+				break;
 			case "--save-template":
 				// 不在此处消费参数（在 run() 中处理）
 				break;
 			case "--list-templates":
 				(async () => {
-					const autoCommit = new ClaudeAutoCommit();
+					const autoCommit = new AutoCommit();
 					const templates = await autoCommit.listTemplates();
 					console.log("📋 Available templates:");
 					if (templates.length === 0) {
@@ -806,16 +1033,16 @@ function parseArgs() {
 				})();
 				return;
 			case "--version":
-				console.log(`Claude Auto Commit ${CLI_VERSION}`);
+				console.log(`AutoCommit ${CLI_VERSION}`);
 				process.exit(0);
 			case "-h":
 			case "--help":
 				// 中文优先的双语帮助文本；与 bin 脚本保持一致，便于直接用 node 运行
 				console.log(`
-Claude Auto Commit (SDK 版本 ${CLI_VERSION}) / Claude Auto Commit (SDK Version ${CLI_VERSION})
+AutoCommit (SDK 版本 ${CLI_VERSION}) / AutoCommit (SDK Version ${CLI_VERSION})
 
 用法 / Usage:
-  claude-auto-commit [options]
+  auto-commit [options]
 
 选项 / Options:
   -l, --language <lang>       提交信息语言（en, ja, zh） / Language for commit message (en, ja, zh)
@@ -828,19 +1055,23 @@ Claude Auto Commit (SDK 版本 ${CLI_VERSION}) / Claude Auto Commit (SDK Version
   --template <name>           使用已保存模板 / Use saved template
   --save-template <name>      将生成的信息保存为模板（仅 dry-run）/ Save generated message as template (dry-run only)
   --list-templates            列出可用模板 / List available templates
+  --provider <claude|codex>   选择 AI 引擎（默认 claude）/ Select AI provider (default: claude)
+  --codex                     快捷方式，等同于 --provider codex / Shortcut for --provider codex
+  --claude                    快捷方式，等同于 --provider claude / Shortcut for --provider claude
+  --codex-model <name>        指定 Codex 模型（可选） / Optional Codex model name
   --version                   显示版本信息 / Show version information
   -h, --help                  显示帮助信息 / Show this help message
 
 示例 / Examples:
-  claude-auto-commit
-  claude-auto-commit -l ja -e -c
-  claude-auto-commit -l zh -e -c
-  claude-auto-commit -t feat --push
-  claude-auto-commit --dry-run --save-template my-template
-  claude-auto-commit --template my-template
+  auto-commit
+  auto-commit -l ja -e -c
+  auto-commit -l zh -e -c
+  auto-commit -t feat --push
+  auto-commit --provider codex --push
+  auto-commit --dry-run --save-template my-template
 
 配置 / Configuration:
-  路径 / Path: ~/.claude-auto-commit/config.yml (YAML only)
+  路径 / Path: ~/.auto-commit/config.yml (YAML only)
   YAML 示例 / Example:
   language: ja
   useEmoji: true
@@ -861,7 +1092,7 @@ Claude Auto Commit (SDK 版本 ${CLI_VERSION}) / Claude Auto Commit (SDK Version
  */
 export async function main() {
 	const options = parseArgs();
-	const autoCommit = new ClaudeAutoCommit(options);
+	const autoCommit = new AutoCommit(options);
 	try {
 		// 中文注释：统一入口，仅调度主流程；异常在此层集中处理
 		await autoCommit.run();
@@ -872,18 +1103,4 @@ export async function main() {
 	}
 }
 
-// 兼容直接执行：若被 Node 直接运行，则调用 main()
-import { fileURLToPath } from "url";
-import { pathToFileURL } from "url";
-const __filename = fileURLToPath(import.meta.url);
-const scriptPath = process.argv[1];
-if (
-	__filename === scriptPath ||
-	pathToFileURL(scriptPath).href === import.meta.url
-) {
-	// 直接执行时调用 main
-	// 中文注释：保留向后兼容，同时便于直接通过 node src/xxx.js 调试
-	main();
-}
-
-export default ClaudeAutoCommit;
+export default AutoCommit;

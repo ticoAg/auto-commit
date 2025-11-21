@@ -2,30 +2,30 @@
 
 ## General Questions
 
-### What is Claude Auto-Commit?
-Claude Auto-Commit is an AI-powered tool that automatically generates meaningful Git commit messages by analyzing your code changes using Claude Code SDK with enhanced performance and reliability.
+### What is AutoCommit?
+AutoCommit is an AI-powered tool that automatically generates meaningful Git commit messages by analyzing your code changes using Claude Code SDK with enhanced performance and reliability.
 
 ### How does it work?
 The tool examines your staged and unstaged changes, uses Claude Code SDK to analyze them, and generates an appropriate commit message based on the context and nature of your changes with improved speed and accuracy.
 
 ### ⚠️ Does it automatically push to remote?
-**By default, Claude Auto-Commit will:**
+**By default, AutoCommit will:**
 1. Stage all changes (`git add .`)
 2. Create a commit with the generated message
 3. **NOT push automatically** (changed in v0.1.0)
 
 To enable auto-push, use the `--push` flag:
 ```bash
-claude-auto-commit --push
+auto-commit --push
 ```
 
 To preview without committing, use the `--dry-run` flag:
 ```bash
-claude-auto-commit --dry-run
+auto-commit --dry-run
 ```
 
 ### Is it free to use?
-Yes, Claude Auto-Commit is open-source and free to use. However, you need:
+Yes, AutoCommit is open-source and free to use. However, you need:
 - **Claude API access** (Pro/Max plan with API key)
 - **Node.js 22.0.0+** installed
 - **Claude Pro/Max subscription**
@@ -39,7 +39,7 @@ The tool itself is free, but it requires Claude Pro/Max subscription. No API key
 Run `claude login` and choose option 2: "Claude app (requires Max subscription)". This opens your browser for OAuth authentication.
 
 ### Do I need an API key?
-No! Claude Auto-Commit uses Claude Code SDK with OAuth authentication. Just run `claude login` once.
+No! AutoCommit uses Claude Code SDK with OAuth authentication. Just run `claude login` once.
 
 ### What if I get "authentication failed" errors?
 1. Ensure you have Claude Pro/Max subscription
@@ -57,10 +57,10 @@ No, Claude Code SDK uses OAuth authentication, not API keys. Use `claude login` 
 3. Try alternative installation methods:
    ```bash
    # Method 1: NPM global installation
-   npm install -g claude-auto-commit
+   npm install -g @ticoag/auto-commit
    
    # Method 2: One-time execution
-   curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/run-once.sh | bash
+   curl -fsSL https://raw.githubusercontent.com/ticoAg/auto-commit/main/scripts/run-once.sh | bash
    ```
 
 ### Node.js version issues
@@ -83,7 +83,7 @@ export PATH="$HOME/.local/bin:$PATH"
 Use NPM global installation or user directory:
 ```bash
 # NPM method (recommended)
-npm install -g claude-auto-commit
+npm install -g @ticoag/auto-commit
 
 # Or manual user installation
 mkdir -p ~/.local/bin
@@ -142,7 +142,7 @@ v0.1.0 includes performance optimizations:
 ## Configuration
 
 ### Where is the config file?
-Default location: `~/.claude-auto-commit/config.yml` (YAML only)
+Default location: `~/.auto-commit/config.yml` (YAML only)
 
 ### How to change default language?
 Edit config file:
@@ -159,13 +159,13 @@ Edit config file:
 Currently auto-push is disabled by default. Use `--push` flag or future config option.
 
 ### Template management
-Templates are stored in: `~/.claude-auto-commit/templates/`
+Templates are stored in: `~/.auto-commit/templates/`
 ```bash
 # List templates
-claude-auto-commit --list-templates
+auto-commit --list-templates
 
 # Use template
-claude-auto-commit --template my-template
+auto-commit --template my-template
 ```
 
 ## Troubleshooting
@@ -173,22 +173,22 @@ claude-auto-commit --template my-template
 ### Debug mode
 Run with verbose output to see performance metrics:
 ```bash
-claude-auto-commit --verbose
+auto-commit --verbose
 ```
 
 ### Check version
 ```bash
-claude-auto-commit --help  # Shows version in help text
+auto-commit --help  # Shows version in help text
 ```
 
 ### Reset configuration
 ```bash
-rm -rf ~/.claude-auto-commit
+rm -rf ~/.auto-commit
 ```
 
 ### Migration notes
 If upgrading from older versions that used JSON config:
-1. Convert your `config.json` to YAML and save as `~/.claude-auto-commit/config.yml`
+1. Convert your `config.json` to YAML and save as `~/.auto-commit/config.yml`
 2. Remove the old JSON file to avoid confusion
 
 ## Contributing
@@ -201,10 +201,10 @@ If upgrading from older versions that used JSON config:
 - Add translations
 
 ### Where to report bugs?
-https://github.com/ticoAg/claude-auto-commit/issues
+https://github.com/ticoAg/auto-commit/issues
 
 ## Need More Help?
 
-- Documentation: https://github.com/ticoAg/claude-auto-commit
-- GitHub: https://github.com/ticoAg/claude-auto-commit
-- Issues: https://github.com/ticoAg/claude-auto-commit/issues
+- Documentation: https://github.com/ticoAg/auto-commit
+- GitHub: https://github.com/ticoAg/auto-commit
+- Issues: https://github.com/ticoAg/auto-commit/issues

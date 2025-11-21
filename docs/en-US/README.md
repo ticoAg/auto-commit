@@ -1,15 +1,15 @@
-# Claude Auto-Commit
+# AutoCommit
 
 <div align="center">
 
-![Claude Auto-Commit Hero](../images/hero-banner.png)
+![AutoCommit Hero](../images/hero-banner.png)
 
-🤖 AI-powered Git commit message generator using Claude Code SDK (SDK version only)
+🤖 Dual-engine (Claude Code + Codex) Git commit message generator (SDK only)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub release](https://img.shields.io/github/release/ticoAg/claude-auto-commit.svg)](https://github.com/ticoAg/claude-auto-commit/releases)
-[![GitHub stars](https://img.shields.io/github/stars/ticoAg/claude-auto-commit.svg)](https://github.com/ticoAg/claude-auto-commit/stargazers)
-[![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Linux-blue.svg)](https://github.com/ticoAg/claude-auto-commit)
+[![GitHub release](https://img.shields.io/github/release/ticoAg/auto-commit.svg)](https://github.com/ticoAg/auto-commit/releases)
+[![GitHub stars](https://img.shields.io/github/stars/ticoAg/auto-commit.svg)](https://github.com/ticoAg/auto-commit/stargazers)
+[![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Linux-blue.svg)](https://github.com/ticoAg/auto-commit)
 [![Node.js](https://img.shields.io/badge/Node.js-22%2B-green.svg)](https://nodejs.org)
 [![Claude Code SDK](https://img.shields.io/badge/Powered%20by-Claude%20Code%20SDK-orange.svg)](https://docs.anthropic.com/en/docs/claude-code)
 
@@ -17,7 +17,9 @@
 
 Language: [日本語](../ja/README.md) | [中文](../zh-CN/README.md)
 
-Claude Auto-Commit integrates AI-powered commit message generation into your Git workflow. It analyzes your changes and produces high-quality, contextual messages using Claude Code SDK.
+AutoCommit integrates AI-powered commit message generation into your Git workflow. It analyzes your changes and produces high-quality, contextual messages using either Claude Code SDK or OpenAI Codex.
+
+> AutoCommit was formerly known as **Claude Auto-Commit**. Use the `auto-commit` command going forward; `claude-auto-commit` stays available as a legacy alias.
 
 ## 🚀 Quick Start
 
@@ -25,38 +27,57 @@ Claude Auto-Commit integrates AI-powered commit message generation into your Git
 
 ```bash
 # Method 1 (recommended)
-curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ticoAg/auto-commit/main/scripts/install.sh | bash
 
 # Method 2: One-time run (no installation)
-curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/run-once.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ticoAg/auto-commit/main/scripts/run-once.sh | bash
 
 # Method 3: NPX
-npx claude-auto-commit
+npx @ticoag/auto-commit
 
 # Method 4: NPM global
-npm install -g claude-auto-commit
+npm install -g @ticoag/auto-commit
 ```
 
 ### Basic Usage
 
 ```bash
-claude-auto-commit                    # Generate and commit
-claude-auto-commit -l ja -e -c        # Japanese + emoji + conventional
-claude-auto-commit -t feat --push     # Commit type + auto push (current branch)
-claude-auto-commit --dry-run -v       # Preview with verbose output
-claude-auto-commit --dry-run --save-template hotfix
-claude-auto-commit --template hotfix
+auto-commit                    # Generate and commit
+auto-commit -l ja -e -c        # Japanese + emoji + conventional
+auto-commit -t feat --push     # Commit type + auto push (current branch)
+auto-commit --dry-run -v       # Preview with verbose output
+auto-commit --dry-run --save-template hotfix
+auto-commit --template hotfix
+```
+
+### Provider Modes (Claude + Codex)
+
+| Provider | Description | Authentication |
+| --- | --- | --- |
+| `claude` (default) | Reuses your local `claude` CLI and Claude Code SDK | Run `claude login` or set `claudePath` |
+| `codex` | Uses `@openai/codex-sdk` for commit drafting | Provide `CODEX_API_KEY`/`OPENAI_API_KEY` or run `codex login` |
+
+Switch providers via CLI or config:
+
+```bash
+auto-commit --provider codex
+auto-commit --provider codex --codex-model o4-mini
+
+# ~/.auto-commit/config.yml
+provider: codex
+codexModel: o4-mini
 ```
 
 ### Requirements
 
 - Git repository
 - Node.js 22+
-- Claude Code tool authenticated via `claude login` (SDK uses this authentication; CLI is not invoked at runtime)
+- For `claude`: `claude login` (CLI only used for auth)
+- For `codex`: Codex CLI bundled via SDK plus valid API key/login
 
 ## ✨ Features (SDK)
 
-- AI-powered via Claude Code SDK
+- Dual-engine AI via Claude Code SDK or Codex
 - Languages: English / Japanese / Chinese (en/ja/zh)
 - Conventional Commits support (optional)
 - Templates and local configuration
@@ -64,15 +85,18 @@ claude-auto-commit --template hotfix
 
 ## ⚙️ Configuration (YAML preferred)
 
-Create or edit `~/.claude-auto-commit/config.yml` (YAML only):
+Create or edit `~/.auto-commit/config.yml` (YAML only):
 
 ```yaml
-# Claude Auto Commit config (YAML)
+# AutoCommit config (YAML)
 # YAML only; no JSON fallback.
 language: en               # en/ja/zh
 useEmoji: false            # whether to use emojis
 conventionalCommit: false  # use Conventional Commits format
 verbose: false             # verbose output
+provider: claude           # claude | codex
+codexModel: gpt-5.1        # optional, overrides Codex model
+# codexPath: /custom/path  # optional, override Codex binary path
 ```
 
 Notes:
@@ -114,4 +138,4 @@ MIT License. See [LICENSE](../../LICENSE).
 
 Made with ❤️ for the developer community
 
-[Report Issues](https://github.com/ticoAg/claude-auto-commit/issues) · [Request Features](https://github.com/ticoAg/claude-auto-commit/issues/new?template=feature_request.md)
+[Report Issues](https://github.com/ticoAg/auto-commit/issues) · [Request Features](https://github.com/ticoAg/auto-commit/issues/new?template=feature_request.md)

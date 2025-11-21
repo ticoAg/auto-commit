@@ -2,12 +2,12 @@
 
 ## Product Hunt
 
-**Title:** Claude Auto-Commit - AI-powered Git commit messages
+**Title:** AutoCommit - AI-powered Git commit messages
 
 **Tagline:** Let AI write your commit messages by understanding your code changes
 
 **Description:**
-Claude Auto-Commit automatically generates meaningful Git commit messages using Claude AI. It analyzes your code changes and creates contextual, professional commit messages in multiple languages.
+AutoCommit automatically generates meaningful Git commit messages using Claude AI. It analyzes your code changes and creates contextual, professional commit messages in multiple languages.
 
 ✨ Features:
 - 🤖 AI-powered analysis of code changes
@@ -27,14 +27,14 @@ Perfect for developers who want to maintain clean Git history without spending t
 
 ## Hacker News
 
-**Title:** Show HN: Claude Auto-Commit – AI-powered Git commit message generator
+**Title:** Show HN: AutoCommit – AI-powered Git commit message generator
 
 **Post:**
-Hi HN! I built Claude Auto-Commit, an open-source CLI tool that generates intelligent Git commit messages using Claude AI.
+Hi HN! I built AutoCommit, an open-source CLI tool that generates intelligent Git commit messages using Claude AI.
 
 The problem: Writing good commit messages takes time and mental energy, especially when you're in the flow of coding.
 
-The solution: Claude Auto-Commit analyzes your staged changes and generates contextual commit messages. It supports multiple languages, Conventional Commits format, and is highly configurable.
+The solution: AutoCommit analyzes your staged changes and generates contextual commit messages. It supports multiple languages, Conventional Commits format, and is highly configurable.
 
 Key features:
 - Understands code context, not just diffs
@@ -44,13 +44,13 @@ Key features:
 
 Installation is one line:
 ```
-curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ticoAg/auto-commit/main/scripts/install.sh | bash
 ```
 
 The project is open source (MIT license) and I'd love your feedback!
 
-GitHub: https://github.com/ticoAg/claude-auto-commit
-Website: https://github.com/ticoAg/claude-auto-commit
+GitHub: https://github.com/ticoAg/auto-commit
+Website: https://github.com/ticoAg/auto-commit
 
 ---
 
@@ -58,11 +58,11 @@ Website: https://github.com/ticoAg/claude-auto-commit
 
 **Thread:**
 
-1/ 🚀 Just launched Claude Auto-Commit - an AI-powered Git commit message generator!
+1/ 🚀 Just launched AutoCommit - an AI-powered Git commit message generator!
 
 Tired of writing "fix bug" or spending minutes crafting the perfect commit message? Let AI do it for you.
 
-🔗 https://github.com/ticoAg/claude-auto-commit
+🔗 https://github.com/ticoAg/auto-commit
 
 2/ How it works:
 - Analyzes your code changes
@@ -87,11 +87,11 @@ All powered by @AnthropicAI's Claude!
 
 Try it now:
 ```
-curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ticoAg/auto-commit/main/scripts/install.sh | bash
 ```
 
 5/ Built with ❤️ and Claude AI
-GitHub: https://github.com/ticoAg/claude-auto-commit
+GitHub: https://github.com/ticoAg/auto-commit
 
 Would love your feedback! What features would you like to see next?
 
@@ -104,13 +104,13 @@ Would love your feedback! What features would you like to see next?
 **Title:** I built an AI-powered Git commit message generator using Claude
 
 **Post:**
-Hey everyone! I just released Claude Auto-Commit, an open-source tool that generates intelligent Git commit messages by analyzing your code changes.
+Hey everyone! I just released AutoCommit, an open-source tool that generates intelligent Git commit messages by analyzing your code changes.
 
 **The Problem:**
 We've all been there - made some changes, ready to commit, and then spend way too long trying to write a meaningful commit message. Or worse, just write "fix" and move on.
 
 **The Solution:**
-Claude Auto-Commit uses Claude AI to analyze your actual code changes and generate contextual, meaningful commit messages. It's not just looking at file names or diff stats - it understands what you actually changed.
+AutoCommit uses Claude AI to analyze your actual code changes and generate contextual, meaningful commit messages. It's not just looking at file names or diff stats - it understands what you actually changed.
 
 **Features:**
 - Multi-language support (English, Japanese, Chinese)
@@ -121,7 +121,7 @@ Claude Auto-Commit uses Claude AI to analyze your actual code changes and genera
 
 **Installation:**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ticoAg/auto-commit/main/scripts/install.sh | bash
 ```
 
 **Requirements:**
@@ -132,17 +132,17 @@ curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scri
 The project is MIT licensed and available on GitHub. I'd love to hear your thoughts and feature requests!
 
 Links:
-- Website: https://github.com/ticoAg/claude-auto-commit
-- GitHub: https://github.com/ticoAg/claude-auto-commit
+- Website: https://github.com/ticoAg/auto-commit
+- GitHub: https://github.com/ticoAg/auto-commit
 
 ---
 
 ## LinkedIn
 
 **Post:**
-🎉 Excited to announce the launch of Claude Auto-Commit!
+🎉 Excited to announce the launch of AutoCommit!
 
-As developers, we know the importance of clear commit messages, but writing them can interrupt our flow. That's why I built Claude Auto-Commit - an AI-powered tool that generates meaningful Git commit messages by understanding your code changes.
+As developers, we know the importance of clear commit messages, but writing them can interrupt our flow. That's why I built AutoCommit - an AI-powered tool that generates meaningful Git commit messages by understanding your code changes.
 
 Key benefits:
 🤖 AI-powered analysis using Claude
@@ -156,6 +156,6 @@ Perfect for development teams looking to:
 • Save time on documentation
 • Improve code review processes
 
-Try it today: https://github.com/ticoAg/claude-auto-commit
+Try it today: https://github.com/ticoAg/auto-commit
 
 #OpenSource #DeveloperTools #AI #Productivity #Git

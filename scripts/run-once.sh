@@ -1,14 +1,14 @@
 #!/bin/bash
 
-# Claude Auto Commit SDK - 临时执行脚本
-# 用法：curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/run-once.sh | bash
+# AutoCommit SDK - 临时执行脚本
+# 用法：curl -fsSL https://raw.githubusercontent.com/ticoAg/auto-commit/main/scripts/run-once.sh | bash
 
 set -e
 
-TEMP_DIR="/tmp/claude-auto-commit-$$"
-REPO_URL="https://github.com/ticoAg/claude-auto-commit"
+TEMP_DIR="/tmp/auto-commit-$$"
+REPO_URL="https://github.com/ticoAg/auto-commit"
 
-echo "🚀 正在临时运行 Claude Auto Commit SDK"
+echo "🚀 正在临时运行 AutoCommit SDK"
 echo "   无需安装，仅在临时目录执行"
 echo ""
 
@@ -45,7 +45,7 @@ fi
 mkdir -p "$TEMP_DIR"
 cd "$TEMP_DIR"
 
-echo "📥 正在下载 Claude Auto Commit SDK..."
+echo "📥 正在下载 AutoCommit SDK..."
 
 # Download and extract
 git clone --depth 1 "$REPO_URL" . 2>/dev/null || {
@@ -66,8 +66,8 @@ if ! claude -p "test" >/dev/null 2>&1; then
 fi
 
 # Parse command line arguments and pass them through
-echo "🤖 正在执行 claude-auto-commit..."
-node src/claude-auto-commit.js "$@"
+echo "🤖 正在执行 auto-commit..."
+node src/auto-commit.js "$@"
 
 # Cleanup
 echo ""

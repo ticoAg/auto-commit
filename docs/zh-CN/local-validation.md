@@ -1,6 +1,6 @@
 # 本地开发自验指南（方案 2：手动克隆 + 软链）
 
-> 适用场景：不使用 `scripts/install.sh`，希望直接基于本仓库代码进行全量功能验证，并在本机以全局命令 `claude-auto-commit` 使用。
+> 适用场景：不使用 `scripts/install.sh`，希望直接基于本仓库代码进行全量功能验证，并在本机以全局命令 `auto-commit` 使用。
 
 ## 前置条件
 
@@ -14,8 +14,8 @@
 
 ```bash
 # 克隆本仓库
-git clone https://github.com/ticoAg/claude-auto-commit.git
-cd claude-auto-commit
+git clone https://github.com/ticoAg/auto-commit.git
+cd auto-commit
 
 # 仅生产依赖（包含 Claude Code SDK 与 YAML 解析）
 npm i --production
@@ -26,24 +26,24 @@ npm i --production
 ```bash
 # 方式 A：用户级（推荐，免 sudo）
 mkdir -p ~/.local/bin
-ln -sf "$(pwd)/bin/claude-auto-commit" ~/.local/bin/claude-auto-commit
+ln -sf "$(pwd)/bin/auto-commit" ~/.local/bin/auto-commit
 # 确保 PATH 包含 ~/.local/bin（未包含则加到 shell 配置）
 
 # 方式 B：系统级（需要 sudo）
-sudo ln -sf "$(pwd)/bin/claude-auto-commit" /usr/local/bin/claude-auto-commit
+sudo ln -sf "$(pwd)/bin/auto-commit" /usr/local/bin/auto-commit
 ```
 
 3. 验证
 
 ```bash
-which claude-auto-commit
-claude-auto-commit --help
+which auto-commit
+auto-commit --help
 ```
 
 ## 配置（仅 YAML）
 
 ```yaml
-# ~/.claude-auto-commit/config.yml
+# ~/.auto-commit/config.yml
 language: zh # en/ja/zh
 useEmoji: true # 是否使用表情
 conventionalCommit: false # 是否使用 Conventional Commits 格式
@@ -74,22 +74,22 @@ git branch -M main && git push -u origin main
 ```bash
 cd /tmp/work
 printf "// change 1\n" >> app.js
-claude-auto-commit --dry-run -v
-# 期望：显示从 ~/.claude-auto-commit/config.yml 读取配置；打印生成的提交信息但不创建 commit
+auto-commit --dry-run -v
+# 期望：显示从 ~/.auto-commit/config.yml 读取配置；打印生成的提交信息但不创建 commit
 ```
 
 2. 模板流（可完全离线绕过 SDK 调用）
 
 ```bash
-mkdir -p ~/.claude-auto-commit/templates
-printf "chore: 本地模板提交流程验证\n" > ~/.claude-auto-commit/templates/local-test.txt
-claude-auto-commit --list-templates  # 应包含 local-test
+mkdir -p ~/.auto-commit/templates
+printf "chore: 本地模板提交流程验证\n" > ~/.auto-commit/templates/local-test.txt
+auto-commit --list-templates  # 应包含 local-test
 
 printf "// change 2\n" >> app.js
-claude-auto-commit --template local-test  # 创建提交
+auto-commit --template local-test  # 创建提交
 
 # 推送到本地假远端（不访问 GitHub）
-claude-auto-commit --template local-test --push
+auto-commit --template local-test --push
 
 git --git-dir=/tmp/remote.git log --oneline  # 应看到最新提交
 ```
@@ -98,24 +98,24 @@ git --git-dir=/tmp/remote.git log --oneline  # 应看到最新提交
 
 ```bash
 printf "// change 3\n" >> app.js
-claude-auto-commit --dry-run --save-template today
-# 期望：不提交；~/.claude-auto-commit/templates/today.txt 被创建
-claude-auto-commit --template today  # 可用该模板进行真实提交
+auto-commit --dry-run --save-template today
+# 期望：不提交；~/.auto-commit/templates/today.txt 被创建
+auto-commit --template today  # 可用该模板进行真实提交
 ```
 
 4. 边界验证
 
-- 工作区干净：`claude-auto-commit -v` → “未检测到变更，工作区干净。”
-- 选项解析：`claude-auto-commit -l ja -e -c -t feat --dry-run -v` 正常运行
+- 工作区干净：`auto-commit -v` → “未检测到变更，工作区干净。”
+- 选项解析：`auto-commit -l ja -e -c -t feat --dry-run -v` 正常运行
 
 ### 指定全局 `claude` 路径（可选）
 
 若系统存在多个 `claude`，你可以在本地配置中显式指定要使用的路径：
 
 ```yaml
-# ~/.claude-auto-commit/config.yml
+# ~/.auto-commit/config.yml
 claudePath: /opt/homebrew/bin/claude
-appendSignature: true  # 提交消息末尾追加 “自动生成 by claude-auto-commit”
+appendSignature: true  # 提交消息末尾追加 “自动生成 by auto-commit”
 ```
 
 在 `--verbose` 模式下，工具会打印所使用的 `claude` 路径与来源（config/which），便于确认是否命中你的登录实例。
@@ -125,9 +125,9 @@ appendSignature: true  # 提交消息末尾追加 “自动生成 by claude-auto
 - 删除软链：
 
 ```bash
-rm -f ~/.local/bin/claude-auto-commit  # 用户级
+rm -f ~/.local/bin/auto-commit  # 用户级
 # 或
-sudo rm -f /usr/local/bin/claude-auto-commit  # 系统级
+sudo rm -f /usr/local/bin/auto-commit  # 系统级
 ```
 
 - 清理沙箱（如创建过）：`rm -rf /tmp/work /tmp/remote.git`

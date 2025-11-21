@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Claude Auto Commit SDK v0.1.0 - 一键安装脚本
-# 用法：curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/install.sh | bash
+# AutoCommit SDK v0.3.0 - 一键安装脚本
+# 用法：curl -fsSL https://raw.githubusercontent.com/ticoAg/auto-commit/main/scripts/install.sh | bash
 
 set -e
 
@@ -13,9 +13,9 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Installation directories
-INSTALL_DIR="$HOME/.claude-auto-commit"
+INSTALL_DIR="$HOME/.auto-commit"
 BIN_DIR="$HOME/.local/bin"
-CONFIG_DIR="$HOME/.claude-auto-commit"
+CONFIG_DIR="$HOME/.auto-commit"
 
 # Function to print colored output
 print_message() {
@@ -71,7 +71,7 @@ update_shell_profile() {
         # Check if PATH already contains the bin directory
         if ! grep -q "$BIN_DIR" "$shell_profile"; then
             echo "" >> "$shell_profile"
-            echo "# Claude Auto Commit SDK 安装路径" >> "$shell_profile"
+            echo "# AutoCommit SDK 安装路径" >> "$shell_profile"
             if [[ "$SHELL" == *"fish"* ]]; then
                 echo "set -gx PATH $BIN_DIR \$PATH" >> "$shell_profile"
             else
@@ -84,8 +84,8 @@ update_shell_profile() {
 
 # Banner
 echo ""
-print_message "$BLUE" "🚀 Claude Auto Commit SDK v0.1.1 安装程序"
-print_message "$BLUE" "=========================================="
+print_message "$BLUE" "🚀 AutoCommit SDK v0.3.0 安装程序"
+print_message "$BLUE" "================================"
 echo ""
 
 # Check prerequisites
@@ -162,7 +162,7 @@ mkdir -p "$BIN_DIR"
 mkdir -p "$CONFIG_DIR/templates"
 
 # Clone or download the repository
-print_message "$YELLOW" "📥 正在下载 Claude Auto Commit SDK..."
+print_message "$YELLOW" "📥 正在下载 AutoCommit SDK..."
 
 # Remove old installation if exists
 if [ -d "$INSTALL_DIR" ]; then
@@ -170,11 +170,11 @@ if [ -d "$INSTALL_DIR" ]; then
 fi
 
 # Clone the repository
-git clone https://github.com/ticoAg/claude-auto-commit.git "$INSTALL_DIR" 2>/dev/null || {
+git clone https://github.com/ticoAg/auto-commit.git "$INSTALL_DIR" 2>/dev/null || {
     # If git clone fails, try downloading as archive
     print_message "$YELLOW" "📦 Git 克隆失败，改为下载压缩包..."
-    curl -fsSL https://github.com/ticoAg/claude-auto-commit/archive/main.tar.gz | tar -xz -C "$HOME/.tmp"
-    mv "$HOME/.tmp/claude-auto-commit-main" "$INSTALL_DIR"
+    curl -fsSL https://github.com/ticoAg/auto-commit/archive/main.tar.gz | tar -xz -C "$HOME/.tmp"
+    mv "$HOME/.tmp/auto-commit-main" "$INSTALL_DIR"
 }
 
 # Install dependencies
@@ -184,6 +184,8 @@ npm install --production
 
 # Create symbolic link
 print_message "$YELLOW" "🔗 正在创建命令链接..."
+ln -sf "$INSTALL_DIR/bin/auto-commit" "$BIN_DIR/auto-commit"
+chmod +x "$BIN_DIR/auto-commit"
 ln -sf "$INSTALL_DIR/bin/claude-auto-commit" "$BIN_DIR/claude-auto-commit"
 chmod +x "$BIN_DIR/claude-auto-commit"
 
@@ -191,14 +193,15 @@ chmod +x "$BIN_DIR/claude-auto-commit"
 if [ ! -f "$CONFIG_DIR/config.yml" ]; then
     print_message "$YELLOW" "⚙️ 正在生成 YAML 默认配置 (config.yml)..."
     cat > "$CONFIG_DIR/config.yml" << 'EOF'
-# Claude Auto Commit 配置（YAML）
+# AutoCommit 配置（YAML）
 # 说明：如同时存在 config.yml 与 config.json，将优先读取 YAML。
-language: en               # en/ja/zh
-useEmoji: false            # 是否在提交消息中使用表情
+language: zh               # en/ja/zh
+useEmoji: true            # 是否在提交消息中使用表情
 conventionalCommit: false  # 是否使用 Conventional Commits 格式
-verbose: false             # 是否启用详细输出
+provider: codex           # claude/codex
+verbose: true             # 是否启用详细输出
 EOF
-    print_message "$GREEN" "✅ 已生成 ~/.claude-auto-commit/config.yml"
+    print_message "$GREEN" "✅ 已生成 ~/.auto-commit/config.yml"
 fi
 
 # If legacy JSON exists, keep it but show a migration hint
@@ -219,13 +222,13 @@ echo "   1. 如果尚未完成 Claude 认证，请先执行："
 echo "      claude login"
 echo "      （选择选项 2：Claude app，需要 Pro/Max 订阅）"
 echo ""
-echo "   2. 在任意 Git 仓库中运行 claude-auto-commit："
-echo "      claude-auto-commit"
-echo "      claude-auto-commit -l zh -e -c"
-echo "      claude-auto-commit --help"
+echo "   2. 在任意 Git 仓库中运行 auto-commit："
+echo "      auto-commit"
+echo "      auto-commit -l zh -e -c"
+echo "      auto-commit --provider codex --push"
 echo ""
 echo "   3. 按需修改默认配置："
-echo "      编辑 ~/.claude-auto-commit/config.yml（推荐）或保留现有 config.json（兼容）"
+echo "      编辑 ~/.auto-commit/config.yml（推荐），或继续沿用 ~/.claude-auto-commit/config.yml（兼容）"
 echo ""
 
 # Check if bin directory is in PATH
@@ -235,5 +238,5 @@ if ! echo "$PATH" | grep -q "$BIN_DIR"; then
     echo "   或重启终端以生效"
 fi
 
-print_message "$BLUE" "🔗 文档与源码：https://github.com/ticoAg/claude-auto-commit"
+print_message "$BLUE" "🔗 文档与源码：https://github.com/ticoAg/auto-commit"
 echo ""

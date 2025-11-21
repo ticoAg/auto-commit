@@ -12,8 +12,8 @@
 
 ## 二、版本来源统一
 - 代码中的版本号均从 `package.json` 读取：
-  - `src/claude-auto-commit.js` 通过 `import pkg from '../package.json' assert { type: 'json' }` 读取；
-  - `bin/claude-auto-commit` 同上。
+  - `src/auto-commit.js` 通过 `import pkg from '../package.json' assert { type: 'json' }` 读取；
+  - `bin/auto-commit` 同上。
 - 这样每次仅需通过 `npm version` 修改 `package.json`，CLI 输出与帮助页会自动一致。
 
 ## 三、自动化发布脚本

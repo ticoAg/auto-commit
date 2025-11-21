@@ -1,22 +1,27 @@
 {
-  "name": "@ticoag/claude-auto-commit",
-  "version": "0.2.1",
-  "description": "AI-powered Git commit message generator using Claude Code SDK",
-  "main": "src/claude-auto-commit.js",
+  "name": "@ticoag/auto-commit",
+  "version": "0.3.0",
+  "description": "AutoCommit: dual-engine (Claude Code + Codex) AI commit automation for Git",
+  "main": "src/auto-commit.js",
   "bin": {
+    "auto-commit": "bin/auto-commit",
     "claude-auto-commit": "bin/claude-auto-commit"
   },
   "type": "module",
   "scripts": {
-    "start": "node src/claude-auto-commit.js",
-    "commit": "node src/claude-auto-commit.js",
-    "dev": "node --watch src/claude-auto-commit.js",
+    "start": "node src/auto-commit.js",
+    "commit": "node src/auto-commit.js",
+    "dev": "node --watch src/auto-commit.js",
     "test": "node test/test.js",
     "release": "node scripts/release.mjs"
   },
   "keywords": [
+    "autocommit",
+    "auto-commit",
     "claude",
     "claude-code-sdk",
+    "codex",
+    "openai",
     "git",
     "commit",
     "ai",
@@ -25,12 +30,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ticoAg/claude-auto-commit.git"
+    "url": "git+https://github.com/ticoAg/auto-commit.git"
   },
   "author": "rakd",
   "license": "MIT",
   "dependencies": {
-    "@anthropic-ai/claude-code": "^1.0.22",
+    "@anthropic-ai/claude-code": "^2.0.47",
+    "@openai/codex-sdk": "^0.61.0",
     "yaml": "^2.4.5"
   },
   "devDependencies": {
@@ -57,9 +63,9 @@
     "doc": "docs"
   },
   "bugs": {
-    "url": "https://github.com/ticoAg/claude-auto-commit/issues"
+    "url": "https://github.com/ticoAg/auto-commit/issues"
   },
-  "homepage": "https://github.com/ticoAg/claude-auto-commit#readme",
+  "homepage": "https://github.com/ticoAg/auto-commit#readme",
   "publishConfig": {
     "access": "public"
   }

@@ -1,15 +1,15 @@
-# Claude Auto-Commit
+# AutoCommit
 
 <div align="center">
 
-![Claude Auto-Commit Hero](../images/hero-banner.png)
+![AutoCommit Hero](../images/hero-banner.png)
 
-🤖 Claude Code SDK を用いた AI 駆動の Git コミットメッセージ生成ツール（SDK 版のみ）
+🤖 Claude Code + Codex の二重エンジンによる AI Git コミット生成ツール（SDK 版のみ）
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub release](https://img.shields.io/github/release/ticoAg/claude-auto-commit.svg)](https://github.com/ticoAg/claude-auto-commit/releases)
-[![GitHub stars](https://img.shields.io/github/stars/ticoAg/claude-auto-commit.svg)](https://github.com/ticoAg/claude-auto-commit/stargazers)
-[![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Linux-blue.svg)](https://github.com/ticoAg/claude-auto-commit)
+[![GitHub release](https://img.shields.io/github/release/ticoAg/auto-commit.svg)](https://github.com/ticoAg/auto-commit/releases)
+[![GitHub stars](https://img.shields.io/github/stars/ticoAg/auto-commit.svg)](https://github.com/ticoAg/auto-commit/stargazers)
+[![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Linux-blue.svg)](https://github.com/ticoAg/auto-commit)
 [![Node.js](https://img.shields.io/badge/Node.js-22%2B-green.svg)](https://nodejs.org)
 [![Claude Code SDK](https://img.shields.io/badge/Powered%20by-Claude%20Code%20SDK-orange.svg)](https://docs.anthropic.com/en/docs/claude-code)
 
@@ -17,7 +17,9 @@
 
 言語: [English](../en-US/README.md) | [中文](../zh-CN/README.md)
 
-Claude Auto-Commit は、Git の変更内容を解析し、Claude Code SDK を用いて高品質でコンテキストに即したコミットメッセージを生成します。
+AutoCommit は Git の変更内容を解析し、**Claude Code SDK** または **OpenAI Codex** のいずれかを用いて高品質でコンテキストに沿ったコミットメッセージを生成します。
+
+> AutoCommit（旧称 Claude Auto-Commit）はデフォルトコマンドを `auto-commit` に変更しました。`claude-auto-commit` は後方互換用のエイリアスとして引き続き利用できます。
 
 ## 🚀 クイックスタート
 
@@ -25,38 +27,56 @@ Claude Auto-Commit は、Git の変更内容を解析し、Claude Code SDK を�
 
 ```bash
 # 方法1（推奨）
-curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ticoAg/auto-commit/main/scripts/install.sh | bash
 
 # 方法2: その場実行（インストール不要）
-curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/run-once.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ticoAg/auto-commit/main/scripts/run-once.sh | bash
 
 # 方法3: NPX
-npx claude-auto-commit
+npx @ticoag/auto-commit
 
 # 方法4: NPM グローバル
-npm install -g claude-auto-commit
+npm install -g @ticoag/auto-commit
 ```
 
 ### 基本的な使い方
 
 ```bash
-claude-auto-commit                    # 生成してコミット
-claude-auto-commit -l ja -e -c        # 日本語 + 絵文字 + Conventional
-claude-auto-commit -t feat --push     # コミットタイプ指定 + 自動 push（現在ブランチ）
-claude-auto-commit --dry-run -v       # 事前確認 + 詳細出力
-claude-auto-commit --dry-run --save-template hotfix
-claude-auto-commit --template hotfix
+auto-commit                    # 生成してコミット
+auto-commit -l ja -e -c        # 日本語 + 絵文字 + Conventional
+auto-commit -t feat --push     # コミットタイプ指定 + 自動 push（現在ブランチ）
+auto-commit --dry-run -v       # 事前確認 + 詳細出力
+auto-commit --dry-run --save-template hotfix
+auto-commit --template hotfix
+```
+
+### Provider（Claude / Codex）
+
+| Provider | 説明 | 認証 |
+| --- | --- | --- |
+| `claude`（既定） | ローカルの `claude` CLI（Claude Code SDK）を再利用 | `claude login` または設定で `claudePath` を指定 |
+| `codex` | `@openai/codex-sdk` を使用 | `CODEX_API_KEY`（または `codex login`）を設定 |
+
+```bash
+auto-commit --provider codex
+auto-commit --provider codex --codex-model o4-mini
+
+# ~/.auto-commit/config.yml
+provider: codex
+codexModel: o4-mini
 ```
 
 ### 必要要件
 
 - Git リポジトリ
 - Node.js 22+
-- `claude login` による認証済みの Claude Code ツール（SDK はこの認証を利用。実行時に CLI コマンドは呼び出しません）
+- Provider に応じた認証:
+  - `claude`: `claude login`
+  - `codex`: `CODEX_API_KEY` または `codex login`
 
 ## ✨ 機能（SDK）
 
-- Claude Code SDK による AI 生成
+- Claude Code SDK または Codex による AI 生成
 - 対応言語: 英語 / 日本語 / 中国語（en/ja/zh）
 - Conventional Commits（任意）
 - テンプレートとローカル設定
@@ -64,15 +84,18 @@ claude-auto-commit --template hotfix
 
 ## ⚙️ 設定（YAML 推奨）
 
-`~/.claude-auto-commit/config.yml` を作成または編集（YAML のみ対応）：
+`~/.auto-commit/config.yml` を作成または編集（YAML のみ対応）：
 
 ```yaml
-# Claude Auto Commit 設定（YAML）
+# AutoCommit 設定（YAML）
 # JSON はサポートしません。
 language: ja               # en/ja/zh
 useEmoji: false            # 絵文字を使用するか
 conventionalCommit: false  # Conventional Commits 形式を使用するか
 verbose: false             # 詳細出力
+provider: claude           # claude / codex
+codexModel: o4-mini        # Codex のモデル（任意）
+# codexPath: /custom/codex # Codex CLI を固定したい場合
 ```
 
 補足:
@@ -93,6 +116,9 @@ verbose: false             # 詳細出力
 | `--template <name>` | 保存済みテンプレートを使用 | - |
 | `--save-template <name>` | テンプレート保存（dry-run 時） | - |
 | `--list-templates` | 利用可能なテンプレート一覧 | - |
+| `--provider <claude|codex>` | Provider を切り替え | `claude` |
+| `--codex` / `--claude` | Provider 切替のショートカット | - |
+| `--codex-model <name>` | Codex モデルを指定 | SDK 既定 |
 | `--version` | バージョン表示 | - |
 | `-h, --help` | ヘルプ表示 | - |
 

@@ -2,7 +2,7 @@
 
 > Updated: 2025-11-03 · Applies to v0.1.x (Node.js 22+ / Claude Code SDK)
 
-This document explains how `claude-auto-commit` works at a high level. The Chinese documentation is primary; this English version is a concise mirror.
+This document explains how `auto-commit` works at a high level. The Chinese documentation is primary; this English version is a concise mirror.
 
 ## Goals
 - Seamlessly integrate AI-generated commit messages into daily Git workflows.
@@ -10,7 +10,7 @@ This document explains how `claude-auto-commit` works at a high level. The Chine
 - Keep the core small; extend via config and templates.
 
 ## Key Pieces
-- Entry: `bin/claude-auto-commit` → `src/claude-auto-commit.js` (`main()`)
+- Entry: `bin/auto-commit` → `src/auto-commit.js` (`main()`)
 - Class: `ClaudeAutoCommit`
 - Subsystems:
 - Config loader (YAML only, 5‑min cache)

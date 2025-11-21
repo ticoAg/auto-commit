@@ -1,9 +1,9 @@
-# Claude Auto-Commit Features (v0.1.0)
+# AutoCommit Features (v0.1.0)
 
 ## Core Features
 
 ### 🧠 AI-Powered Commit Messages
-Claude Code SDK analyzes your code changes to generate meaningful commit messages that accurately describe what was changed and why.
+Claude Code SDK or Codex analyzes your code changes to generate meaningful commit messages that accurately describe what was changed and why.
 
 ### 🌍 Multi-Language Support
 Currently supports:
@@ -13,14 +13,14 @@ Currently supports:
 ### 📝 Conventional Commits
 Support for the [Conventional Commits](https://www.conventionalcommits.org/) specification:
 ```bash
-claude-auto-commit -c -t feat
+auto-commit -c -t feat
 # Output: feat: add user authentication module
 ```
 
 ### 😊 Emoji Support
 Add contextual emojis to commit messages:
 ```bash
-claude-auto-commit -e
+auto-commit -e
 # Output: ✨ Add new user authentication feature
 ```
 
@@ -34,13 +34,13 @@ claude-auto-commit -e
 ### 🔍 Dry Run Mode
 Preview the generated commit message without actually committing:
 ```bash
-claude-auto-commit --dry-run
+auto-commit --dry-run
 ```
 
 ### 📊 Change Summary
 Get detailed statistics about your changes:
 ```bash
-claude-auto-commit --summary
+auto-commit --summary
 
 # Output:
 # 📋 Detailed change contents:
@@ -77,51 +77,32 @@ claude-auto-commit --summary
 | `--dry-run` | Preview without committing |
 | `--summary` | Show detailed change statistics |
 
-### Configuration File
-
-Create `~/.claude-auto-commit/config.yml`:
-
-```yaml
-auto_update:
-  enabled: true
-  frequency: daily  # daily/weekly/manual/always
-  silent: false
-
-defaults:
-  language: en
-  branch: main
-  emoji: false
-  conventional: false
-
-git:
-  auto_stage: true
-  auto_push: true
-```
+> Note: legacy options like `--summary`, `--auto-update` and history learning are no longer implemented in the SDK-based CLI. The current feature set focuses on high‑quality commit generation, templates, and provider switching.
 
 ## Usage Examples
 
 ### Basic Usage
 ```bash
 # Simple commit with auto-generated message
-claude-auto-commit
+auto-commit
 
 # Without pushing
-claude-auto-commit -n
+auto-commit -n
 ```
 
 ### Advanced Usage
 ```bash
 # Dry run with summary in Japanese
-claude-auto-commit --dry-run --summary -l ja
+auto-commit --dry-run --summary -l ja
 
 # Conventional commit for a new feature with emoji
-claude-auto-commit -c -t feat -e
+auto-commit -c -t feat -e
 
 # Custom prefix with manual staging
-claude-auto-commit -p "[HOTFIX]" -s
+auto-commit -p "[HOTFIX]" -s
 
 # Skip all confirmations for automation
-claude-auto-commit -y
+auto-commit -y
 ```
 
 ## Workflow Integration
@@ -130,9 +111,9 @@ claude-auto-commit -y
 Add to your `.gitconfig`:
 ```ini
 [alias]
-    ac = !claude-auto-commit
-    acp = !claude-auto-commit -n
-    acd = !claude-auto-commit --dry-run --summary
+    ac = !auto-commit
+    acp = !auto-commit -n
+    acd = !auto-commit --dry-run --summary
 ```
 
 ### Pre-commit Hook
@@ -144,7 +125,7 @@ Coming soon: Automatic message generation as a git hook.
 Analyze your project's commit history to maintain consistent style:
 ```bash
 # Analyze last 100 commits
-claude-auto-commit --analyze-history
+auto-commit --analyze-history
 
 # Output:
 # 📊 Emoji usage: 76% (76/100 commits)
@@ -156,7 +137,7 @@ claude-auto-commit --analyze-history
 ### 🎯 Smart File Grouping
 Intelligently categorize changed files:
 ```bash
-claude-auto-commit --smart-group
+auto-commit --smart-group
 
 # Output:
 # File categories detected:
@@ -169,7 +150,7 @@ claude-auto-commit --smart-group
 Apply analyzed patterns to new commits:
 ```bash
 # Use learned commit style
-claude-auto-commit --style learned
+auto-commit --style learned
 ```
 
 ## New Features (v0.1.0) - Latest SDK Version
@@ -178,21 +159,21 @@ claude-auto-commit --style learned
 Save and reuse common commit message patterns with persistent storage:
 
 ```bash
-# Save a template (stored in ~/.claude-auto-commit/templates/)
-claude-auto-commit --dry-run --save-template feature-update
+# Save a template (stored in ~/.auto-commit/templates/)
+auto-commit --dry-run --save-template feature-update
 
 # Use a saved template
-claude-auto-commit --template feature-update
+auto-commit --template feature-update
 
 # List available templates
-claude-auto-commit --list-templates
+auto-commit --list-templates
 ```
 
 ### ⚙️ Configuration File Support
 YAML-based configuration with caching:
 
 ```yaml
-# Configuration saved in ~/.claude-auto-commit/config.yml
+# Configuration saved in ~/.auto-commit/config.yml
 language: ja
 useEmoji: true
 conventionalCommit: true
@@ -204,7 +185,7 @@ Optional automatic push to remote repository:
 
 ```bash
 # Enable auto-push for this commit
-claude-auto-commit --push
+auto-commit --push
 
 # Enable auto-push in configuration (YAML)
 ```
@@ -214,7 +195,7 @@ Detailed execution information and timing:
 
 ```bash
 # Enable verbose mode
-claude-auto-commit --verbose
+auto-commit --verbose
 
 # Output:
 # ⏱️  Config and Git setup: 45.23ms
@@ -239,20 +220,20 @@ Improved reliability with exponential backoff:
 
 ## 新特性 (v0.1.6)
 
-- 🧩 干净的 CLI 入口：核心脚本导出 `main()` 并由 `bin/claude-auto-commit` 调用，避免由于模块导入而不执行主逻辑导致的静默退出。
+- 🧩 干净的 CLI 入口：核心脚本导出 `main()` 并由 `bin/auto-commit` 调用，避免由于模块导入而不执行主逻辑导致的静默退出。
 - 📡 任务日志增强（`--verbose`）：在生成提交信息时实时打印 Claude Code 的流式消息，包含：
   - system：模型与权限模式等初始化信息
   - assistant：助理输出的文本预览（自动截断）
   - result：回合数、耗时与成本等摘要
 - 🔎 启动预检：仅判断是否可以通过 `claude` 命令启动（`claude --version`），不检查其他安装来源；若不可用会输出中文错误提示。
-- ⚙️ 可配置全局路径：支持在 `~/.claude-auto-commit/config.yml` 指定 `claudePath`，优先于 PATH 探测。
-- 🖊️ 提交尾注：默认在生成的提交消息末尾追加 `自动生成 by claude-auto-commit`，可通过 `appendSignature: false` 关闭。
+- ⚙️ 可配置全局路径：支持在 `~/.auto-commit/config.yml` 指定 `claudePath`，优先于 PATH 探测。
+- 🖊️ 提交尾注：默认在生成的提交消息末尾追加 `自动生成 by auto-commit`，可通过 `appendSignature: false` 关闭。
 
 > 提示：若日志出现 “Invalid API key · Please run /login”，请先在终端运行 `claude` 并按提示完成登录/配置后重试。
 
 ### 📦 Multiple Installation Methods
 - **One-liner installer**: `curl -fsSL ... | bash`
-- **NPM global**: `npm install -g claude-auto-commit`
+- **NPM global**: `npm install -g @ticoag/auto-commit`
 - **One-time execution**: `curl -fsSL .../run-once.sh | bash`
 
 ## Breaking Changes (v0.1.0)

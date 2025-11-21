@@ -49,7 +49,7 @@ async function ensureCleanGit() {
 async function run() {
   const rl = readline.createInterface({ input, output });
   try {
-    console.log('==== Claude Auto-Commit 发布向导 ====');
+    console.log('==== AutoCommit 发布向导 ====');
     await ensureCleanGit();
 
     const pkg = await getPkg();
@@ -76,7 +76,7 @@ async function run() {
 
     // 2) 生成/更新文档
     // 2.1 追加根 CHANGELOG.md 与 docs/zh-CN/CHANGELOG.md（若不存在则创建）
-    const changelogEntry = `\n## ${ver}（${date}）\n\n- 新增：结构化提示词（主题行 + 要点）\n- 改进：verbose 分段日志（含 trace_id）\n- 改进：提交信息以等号分隔块高亮显示，去除外层引号\n- 兼容性：无破坏性改动\n`;
+    const changelogEntry = `\n## ${ver}（${date}）\n\n- 新增：Codex 通道（@openai/codex-sdk），可在 CLI 中切换 provider\n- 新增：项目品牌更名为 AutoCommit，默认命令改为 \`auto-commit\`\n- 优化：配置与模板目录切换至 ~/.auto-commit，仍兼容旧路径\n- 文档：README 与多语言指南同步更新，包含新的安装与发布说明\n- 兼容性：保留 \`claude-auto-commit\` 命令的向后兼容别名\n`;
     const rootChangelog = path.join(ROOT, 'CHANGELOG.md');
     const zhChangelog = path.join(ROOT, 'docs', 'zh-CN', 'CHANGELOG.md');
     try { await fs.access(rootChangelog); } catch { await fs.writeFile(rootChangelog, '# 更新记录\n'); }
@@ -88,7 +88,7 @@ async function run() {
     const publishDir = path.join(ROOT, 'docs', 'publish');
     await fs.mkdir(publishDir, { recursive: true });
     const publishPath = path.join(publishDir, `${ver}-npm-publish.md`);
-    const publishDoc = `---\ntitle: ${ver} 发布到 npm\ndate: ${date}\nsemver: ${ver}\n---\n\n# ${ver} 发布到 npm（作用域包）\n\n- 包名：@ticoag/claude-auto-commit\n- Node.js：>= 22\n- 发布类型：${bump === 'custom' ? 'custom' : bump}\n\n## 主要变更\n- 新增：结构化提示词（主题行 + 要点）\n- 改进：verbose 分段日志（含 trace_id）\n- 改进：提交信息以等号分隔块高亮显示，去除外层引号\n- 兼容性：无破坏性改动\n\n## 安装与升级\n\n一次性运行：\n\n\`\`\`bash\nnpx @ticoag/claude-auto-commit@${ver} --help\n\`\`\`\n\n全局安装：\n\n\`\`\`bash\nnpm i -g @ticoag/claude-auto-commit@${ver}\n\`\`\`\n\n## 发布命令（参考）\n\n已设置 publishConfig.access 为 public，可直接：\n\n\`\`\`bash\nnpm publish\n\`\`\`\n\n## 注意事项\n- 请确认已登录 npm：\n  - \`npm whoami\`\n- 若启用 2FA，按提示输入一次性验证码\n- 建议先用 \`npm pack --dry-run\` 预览打包内容\n`;
+    const publishDoc = `---\ntitle: ${ver} 发布到 npm\ndate: ${date}\nsemver: ${ver}\n---\n\n# ${ver} 发布到 npm（作用域包）\n\n- 包名：@ticoag/auto-commit\n- Node.js：>= 22\n- 发布类型：${bump === 'custom' ? 'custom' : bump}\n\n## 主要变更\n- 新增：Codex provider（@openai/codex-sdk），支持 \`--provider codex\`\n- 更名：CLI 命令更新为 \`auto-commit\`，保留旧别名\n- 配置：默认目录迁移至 ~/.auto-commit，模板/配置共用\n- 文档：多语言 README、发布指南、安装脚本同步更新\n\n## 安装与升级\n\n一次性运行：\n\n\`\`\`bash\nnpx @ticoag/auto-commit@${ver} --help\n\`\`\`\n\n全局安装：\n\n\`\`\`bash\nnpm i -g @ticoag/auto-commit@${ver}\n\`\`\`\n\n## 发布命令（参考）\n\n已设置 publishConfig.access 为 public，可直接：\n\n\`\`\`bash\nnpm publish\n\`\`\`\n\n## 注意事项\n- 请确认已登录 npm：\n  - \`npm whoami\`\n- 若启用 2FA，按提示输入一次性验证码\n- 建议先用 \`npm pack --dry-run\` 预览打包内容\n`;
     await fs.writeFile(publishPath, publishDoc);
 
     // 3) 提交文档更新
@@ -121,4 +121,3 @@ async function run() {
 }
 
 run();
-

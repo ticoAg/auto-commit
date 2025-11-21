@@ -1,41 +1,41 @@
-# Claude Auto-Commit 参考手册 (v0.1.5)
+# AutoCommit 参考手册 (v0.1.5)
 
 > 更新记录：2025-11-03 · v0.1.5 · 新增中文提交信息支持与无变更提示优化
 
-Claude Auto-Commit 基于 Claude Code SDK，提供面向中文团队的自动化提交助手。本手册覆盖命令使用、参数说明与配置要点。
+AutoCommit 基于 Claude Code SDK，提供面向中文团队的自动化提交助手。本手册覆盖命令使用、参数说明与配置要点。
 
 ## 快速开始
 
 ```bash
 # 基本执行（需已处于 Git 仓库）
-claude-auto-commit
+auto-commit
 
 # 首次安装（NPM 全局）
-npm install -g claude-auto-commit
-claude-auto-commit
+npm install -g @ticoag/auto-commit
+auto-commit
 
 # 一次性执行脚本
-curl -fsSL https://raw.githubusercontent.com/ticoAg/claude-auto-commit/main/scripts/run-once.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ticoAg/auto-commit/main/scripts/run-once.sh | bash
 ```
 
 ## 常用命令示例
 
 ```bash
 # 中文提交信息 + 表情 + Conventional Commits
-claude-auto-commit -l zh -e -c
+auto-commit -l zh -e -c
 
 # 指定提交类型并自动推送
-claude-auto-commit -t feat --push
+auto-commit -t feat --push
 
 # 仅预览提交信息
-claude-auto-commit --dry-run
+auto-commit --dry-run
 
 # 查看详细分析与耗时
-claude-auto-commit --verbose
+auto-commit --verbose
 
 # 使用或保存模板
-claude-auto-commit --template hotfix
-claude-auto-commit --dry-run --save-template hotfix
+auto-commit --template hotfix
+auto-commit --dry-run --save-template hotfix
 ```
 
 ## 参数列表
@@ -65,8 +65,8 @@ claude-auto-commit --dry-run --save-template hotfix
 
 ## 配置文件
 
-- 存放路径：`~/.claude-auto-commit/config.yml`（仅 YAML）
-- 模板目录：`~/.claude-auto-commit/templates/`
+- 存放路径：`~/.auto-commit/config.yml`（仅 YAML）
+- 模板目录：`~/.auto-commit/templates/`
 - 示例配置（中文团队推荐）：
 
 ```json

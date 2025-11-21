@@ -1,11 +1,11 @@
-# Contributing to Claude Auto-Commit
+# Contributing to AutoCommit
 
-Thank you for your interest in contributing to Claude Auto-Commit! We welcome contributions from the community.
+Thank you for your interest in contributing to AutoCommit! We welcome contributions from the community.
 
 ## 🤝 How to Contribute
 
 ### Reporting Issues
-1. Check existing [issues](https://github.com/ticoAg/claude-auto-commit/issues) first
+1. Check existing [issues](https://github.com/ticoAg/auto-commit/issues) first
 2. Use the appropriate issue template
 3. Provide detailed information including:
    - Version number
@@ -30,14 +30,14 @@ Thank you for your interest in contributing to Claude Auto-Commit! We welcome co
 #### Development Setup
 ```bash
 # Clone the repository
-git clone https://github.com/ticoAg/claude-auto-commit.git
-cd claude-auto-commit
+git clone https://github.com/ticoAg/auto-commit.git
+cd auto-commit
 
 # Install dependencies (production is enough for CLI usage)
 npm install --production
 
 # Verify the CLI
-node src/claude-auto-commit.js --help
+node src/auto-commit.js --help
 ```
 
 #### Testing Your Changes
@@ -45,14 +45,14 @@ Before submitting a pull request, please test your changes:
 
 ```bash
 # Test basic functionality (dry-run)
-node src/claude-auto-commit.js --dry-run
+node src/auto-commit.js --dry-run
 
 # Test with options
-node src/claude-auto-commit.js -l zh -e -c -t feat --dry-run
+node src/auto-commit.js -l zh -e -c -t feat --dry-run
 
 # Template system
-node src/claude-auto-commit.js --dry-run --save-template test
-node src/claude-auto-commit.js --template test
+node src/auto-commit.js --dry-run --save-template test
+node src/auto-commit.js --template test
 ```
 
 #### Pull Request Process
@@ -97,7 +97,7 @@ docs: update installation instructions
 - [ ] Different language options
 - [ ] Template system
 - [ ] History analysis
-- [ ] Auto-update functionality
+- [ ] Provider switching（claude/codex）
 - [ ] Error handling
 
 ### Platform Testing
@@ -109,15 +109,15 @@ docs: update installation instructions
 
 1. Update version in `package.json` (if applicable)
 2. Update CHANGELOG.md
-3. Create and test release
-4. Tag version: `git tag v0.0.x`
-5. Push tag: `git push origin v0.0.x`
+3. Run `node scripts/release.mjs` 并完成交互流程（生成 changelog / docs/publish）
+4. Tag version: `git tag v0.x.y`
+5. Push tag: `git push origin v0.x.y`
 6. GitHub Actions will create the release
 
 ## 🤔 Questions?
 
 - Check the [README](./README.md) first
-- Search [existing issues](https://github.com/ticoAg/claude-auto-commit/issues)
+- Search [existing issues](https://github.com/ticoAg/auto-commit/issues)
 
 ## Upstream / 原始仓库
 
@@ -135,4 +135,4 @@ By contributing, you agree that your contributions will be licensed under the MI
 
 ---
 
-Thank you for helping make Claude Auto-Commit better! 🚀
+Thank you for helping make AutoCommit better! 🚀

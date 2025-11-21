@@ -8,9 +8,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### 变更
-// 2025-11-03
-- 💬 帮助命令（-h/--help）注释改为中英双语显示（中文优先）；`bin/claude-auto-commit` 与 `src/claude-auto-commit.js` 文案保持一致。
-- 🔧 统一帮助示例（Examples）：两处均使用 `claude-auto-commit ...` 形式，去除 `node src/...` 示例，避免混淆。
+- _暂无记录_
+
+## [0.3.0] - 2025-11-20
+
+### 新增
+
+- 🤖 **Codex provider**：引入 `@openai/codex-sdk` 并通过 `--provider codex` / YAML `provider: codex` 切换，支持可选 `--codex-model`。
+- 🧩 **Provider 自检**：在启动阶段根据 provider 自动执行 `claude` 或 Codex CLI 可用性检查，并输出 verbose 日志。
+- 🧷 **二进制别名**：新增默认命令 `auto-commit`，保留 `claude-auto-commit` 作为兼容入口（带提示）。
+- 🧾 **签名与模板**：模板、配置、签名文案同步更新至 AutoCommit，并在 `.auto-commit` 与旧目录间兼容读取。
+
+### 变更
+
+- 🔁 **项目更名**：全局名称从 *Claude Auto-Commit* 更改为 *AutoCommit*；`package.json`/NPM 包、脚本、README 与多语言文档全部更新。
+- 🗂️ **配置目录迁移**：默认配置与模板目录改为 `~/.auto-commit/`，仍自动兼容旧的 `~/.claude-auto-commit/`。
+- 📜 **脚本与文档**：`install.sh`、`run-once.sh`、多语言 README/FAQ/FEATURES、发布脚本与公告模板全部指向新仓库与命令。
+- 📝 **Changelog/Release**：release 向导与 docs/publish 模板更新，反映更名与 Codex 新功能。
+- 💬 **帮助文本双语化**：`auto-commit -h/--help` 与 bin 入口输出保持一致，默认展示中英双语帮助说明。
+- 🔧 **CLI 示例统一**：全部帮助示例统一使用 `auto-commit ...` 形式，避免与 Node 直接执行的老示例混淆。
+
+### 兼容性
+
+- ♻️ `claude-auto-commit` 命令继续存在（内部调用新入口），并在执行时输出一次性迁移提示。
+- 📁 `~/.claude-auto-commit` 中的配置与模板仍会被优先读取；保存模板则写入新目录，方便后续迁移。
 
 ## [0.1.6] - 2025-11-03
 

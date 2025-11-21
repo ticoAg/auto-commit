@@ -22,3 +22,10 @@
 - 改进：verbose 分段日志（含 trace_id）
 - 改进：提交信息以等号分隔块高亮显示，去除外层引号
 - 兼容性：无破坏性改动
+
+## 0.3.0（2025-11-20）
+
+- 更名：全站文档由 *Claude Auto-Commit* 调整为 *AutoCommit*，命令/截图与链接同步更新。
+- provider：`zh-CN` / `en-US` / `ja` README 增加 Codex/Provider 说明、配置示例与命令选项。
+- 安装：所有脚本/指南中的 `npx`、`npm install` 命令改为 `@ticoag/auto-commit`，curl 链接指向新仓库。
+- Release：更新 `docs/publish` 模板与公告模版（announcement-template），对外文案改为 AutoCommit。
