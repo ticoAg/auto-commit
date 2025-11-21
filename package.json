@@ -1,6 +1,6 @@
 {
   "name": "@ticoag/auto-commit",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "AutoCommit: dual-engine (Claude Code + Codex) AI commit automation for Git",
   "main": "src/auto-commit.js",
   "bin": {
