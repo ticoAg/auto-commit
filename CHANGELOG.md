@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2025-11-21
+
+### 变更
+
+- 🔧 **默认配置更新**：默认 Provider 调整为 `codex`，模型为 `gpt-5.1`，语言为 `zh`（中文），默认开启 Emoji。
+- 🗑️ **移除日语支持**：移除所有日语注释与逻辑代码。
+- 🗑️ **移除兼容性**：移除 `claude-auto-commit` 二进制别名及其兼容逻辑。
+
 ## [Unreleased]
 
 ### 变更
