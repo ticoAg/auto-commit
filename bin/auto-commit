@@ -24,11 +24,11 @@ if (args.includes("--help") || args.includes("-h")) {
 	console.log(`
 AutoCommit (SDK 版本 ${CLI_VERSION}) / AutoCommit (SDK Version ${CLI_VERSION})
 
-用法 / Usage:
+ 用法 / Usage:
   auto-commit [options]
 
 选项 / Options:
-  -l, --language <lang>       提交信息语言（en, ja, zh） / Language for commit message (en, ja, zh)
+  -l, --language <lang>       提交信息语言（zh, en） / Language for commit message (zh, en)
   -e, --emoji                 在提交信息中包含表情 / Include emojis in commit message
   -c, --conventional          使用 Conventional Commits 规范 / Use Conventional Commits format
   -t, --type <type>           指定提交类型（feat, fix, docs 等）/ Specify commit type (feat, fix, docs, etc.)
@@ -38,22 +38,21 @@ AutoCommit (SDK 版本 ${CLI_VERSION}) / AutoCommit (SDK Version ${CLI_VERSION})
   --template <name>           使用已保存模板 / Use saved template
   --save-template <name>      将生成的信息保存为模板（仅 dry-run）/ Save generated message as template (dry-run only)
   --list-templates            列出可用模板 / List available templates
-  --provider <claude|codex>   选择 AI 引擎（默认 claude）/ Select AI provider (default claude)
+  --provider <claude|codex>   选择 AI 引擎（默认 codex）/ Select AI provider (default codex)
   --codex-model <name>        指定 Codex 模型 / Optional Codex model name
   --version                   显示版本信息 / Show version information
   -h, --help                  显示帮助信息 / Show this help message
 
-示例 / Examples:
+ 示例 / Examples:
   auto-commit
-  auto-commit -l ja -e -c
   auto-commit -l zh -e -c
+  auto-commit -l en -e -c
   auto-commit -t feat --push
   auto-commit --provider codex --push
   auto-commit --dry-run --save-template my-template
 
-配置 / Configuration:
-  推荐 / Preferred: ~/.auto-commit/config.yml (YAML)
-  兼容 / Compatible: ~/.claude-auto-commit/config.yml (legacy)
+ 配置 / Configuration:
+  路径 / Path: ~/.auto-commit/config.yml (YAML only)
   `);
 	process.exit(0);
 }

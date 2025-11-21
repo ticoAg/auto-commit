@@ -4,8 +4,7 @@
   "description": "AutoCommit: dual-engine (Claude Code + Codex) AI commit automation for Git",
   "main": "src/auto-commit.js",
   "bin": {
-    "auto-commit": "bin/auto-commit",
-    "claude-auto-commit": "bin/claude-auto-commit"
+    "auto-commit": "bin/auto-commit"
   },
   "type": "module",
   "scripts": {

@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /**
- * 中文模块说明：
- *  - 本文件为 SDK 版主实现入口，提供 AI 生成提交信息的完整流程。
- *  - 设计遵循“同步优先、最小副作用”，通过并行 Git 命令与结果缓存兼顾性能。
- *  - 关键节点输出可选的结构化日志（--verbose），日志包含 trace_id 便于问题追踪。
- *  - 仅对注释与文档进行增强，保持对外行为与 CLI 参数兼容，不改动核心逻辑。
+ * Module Description:
+ *  - This file is the main entry point for the SDK version, providing the complete flow for AI commit message generation.
+ *  - Designed to follow "Sync First, Minimal Side Effects", balancing performance with parallel Git commands and result caching.
+ *  - Key nodes output optional structured logs (--verbose), including trace_id for issue tracking.
+ *  - Only enhances comments and documentation, maintaining external behavior and CLI parameter compatibility without changing core logic.
  */
 import { query } from "@anthropic-ai/claude-code";
 import { Codex } from "@openai/codex-sdk";
@@ -27,16 +27,17 @@ const execAsync = promisify(exec);
 /**
  * AutoCommit
  *
- * 中文类注释：封装“配置读取 → 变更感知 → 提示词构造 → 文本生成 → 提交/推送”的主流程。
- * - 可通过构造参数或配置文件覆盖默认行为；
- * - 运行期维护轻量级缓存（_gitCache/_configCache），减少重复 IO；
- * - 发生错误时抛出具备中文语义的异常信息，便于最终用户理解。
+ * Class Description: Encapsulates the main flow of "Config Read -> Change Detection -> Prompt Construction -> Text Generation -> Commit/Push".
+ * - Default behavior can be overridden via constructor arguments or configuration file;
+ * - Maintains lightweight runtime caches (_gitCache/_configCache) to reduce repeated IO;
+ * - Throws exceptions with Chinese semantic information on error, facilitating end-user understanding.
  */
 class AutoCommit {
 	constructor(options = {}) {
 		this._cliOptions = { ...options };
-		this.language = options.language || "en";
-		this.useEmoji = options.useEmoji || false;
+		// Default to Chinese + Emoji
+		this.language = options.language || "zh";
+		this.useEmoji = options.useEmoji ?? true;
 		this.conventionalCommit = options.conventionalCommit || false;
 		this.commitType = options.commitType || "";
 		this.dryRun = options.dryRun || false;
@@ -46,9 +47,11 @@ class AutoCommit {
 		this.maxRetries = options.maxRetries || 3;
 		this.timeout = options.timeout || 30000;
 		this.traceId = options.traceId || randomUUID();
-		const provider = (options.provider || "claude").toString().toLowerCase();
-		this.provider = provider === "codex" ? "codex" : "claude";
-		this.codexModel = options.codexModel || "";
+		// Default to Codex provider
+		const provider = (options.provider || "codex").toString().toLowerCase();
+		this.provider = provider === "claude" ? "claude" : "codex";
+		// Default to gpt-5.1 model (can be overridden via CLI/config)
+		this.codexModel = options.codexModel || "gpt-5.1";
 		this.codexExecutablePath = options.codexPath || null;
 		this._codexClient = null;
 		// 缓存：Git 命令结果，避免在单次运行内重复执行
@@ -61,9 +64,8 @@ class AutoCommit {
 		this.claudeExecutablePath = null;
 		// 是否在提交信息末尾附加来源标识，默认开启
 		this.appendSignature = true;
-		// 配置目录（优先使用 AutoCommit 新路径）
+		// 配置目录（仅使用 AutoCommit 新路径）
 		this.primaryConfigDir = path.join(os.homedir(), ".auto-commit");
-		this.legacyConfigDir = path.join(os.homedir(), ".claude-auto-commit");
 		this.activeConfigDir = this.primaryConfigDir;
 		}
 
@@ -112,42 +114,27 @@ class AutoCommit {
 				return this._configCache;
 			}
 
-			const candidates = [
-				{ dir: this.primaryConfigDir, label: "primary" },
-				{ dir: this.legacyConfigDir, label: "legacy" },
-			];
-
 			let config = null;
 			let source = "default";
 
-			for (const candidate of candidates) {
-				const yamlPath = path.join(candidate.dir, "config.yml");
+			const yamlPath = path.join(this.primaryConfigDir, "config.yml");
+			try {
 				const exists = await fs
 					.access(yamlPath)
 					.then(() => true)
 					.catch(() => false);
 				if (!exists) {
-					continue;
-				}
-				try {
+					this.activeConfigDir = this.primaryConfigDir;
+				} else {
 					const content = await fs.readFile(yamlPath, "utf8");
 					config = YAML.parse(content) || {};
 					source = yamlPath;
-					this.activeConfigDir = candidate.dir;
-					if (
-						candidate.label === "legacy" &&
-						this.verbose
-					) {
-						console.log(
-							"ℹ️ 检测到 ~/.claude-auto-commit 配置，建议迁移到 ~/.auto-commit。"
-						);
-					}
-					break;
-				} catch (e) {
-					console.log(
-						`⚠️  无法解析 YAML 配置（${yamlPath}）：${e.message}，将继续尝试其他目录。`
-					);
+					this.activeConfigDir = this.primaryConfigDir;
 				}
+			} catch (e) {
+				console.log(
+					`⚠️  无法解析 YAML 配置（${yamlPath}）：${e.message}，将使用内置默认值。`
+				);
 			}
 
 			if (!config) {
@@ -204,7 +191,8 @@ class AutoCommit {
 					this.appendSignature = config.appendSignature;
 				}
 
-				this.language = this.language || "en";
+				// Fallback: Default to Chinese
+				this.language = this.language || "zh";
 				this.useEmoji = Boolean(this.useEmoji);
 				this.conventionalCommit = Boolean(this.conventionalCommit);
 
@@ -257,60 +245,25 @@ class AutoCommit {
 
 	async loadTemplate(name) {
 		try {
-			const dirs = [
+			const templatePath = path.join(
 				this.primaryConfigDir,
-				this.legacyConfigDir !== this.primaryConfigDir
-					? this.legacyConfigDir
-					: null,
-			].filter(Boolean);
-
-			for (const dir of dirs) {
-				const templatePath = path.join(dir, "templates", `${name}.txt`);
-				try {
-					const template = await fs.readFile(templatePath, "utf8");
-					return template.trim();
-				} catch {
-					continue;
-				}
-			}
-			throw new Error("not_found");
+				"templates",
+				`${name}.txt`
+			);
+			const template = await fs.readFile(templatePath, "utf8");
+			return template.trim();
 		} catch (error) {
-			if (error.message === "not_found") {
-				throw new Error(`Template "${name}" not found`);
-			}
-			throw error;
+			throw new Error(`Template "${name}" not found`);
 		}
 	}
 
 	async listTemplates() {
 		try {
-			const seen = new Set();
-			const all = [];
-			const dirs = [
-				this.primaryConfigDir,
-				this.legacyConfigDir !== this.primaryConfigDir
-					? this.legacyConfigDir
-					: null,
-			].filter(Boolean);
-
-			for (const dir of dirs) {
-				try {
-					const templatesDir = path.join(dir, "templates");
-					const files = await fs.readdir(templatesDir);
-					files
-						.filter((f) => f.endsWith(".txt"))
-						.map((f) => f.replace(".txt", ""))
-						.forEach((name) => {
-							if (!seen.has(name)) {
-								seen.add(name);
-								all.push(name);
-							}
-						});
-				} catch {
-					continue;
-				}
-			}
-			return all;
+			const templatesDir = path.join(this.primaryConfigDir, "templates");
+			const files = await fs.readdir(templatesDir);
+			return files
+				.filter((f) => f.endsWith(".txt"))
+				.map((f) => f.replace(".txt", ""));
 		} catch (error) {
 			return [];
 		}
@@ -318,10 +271,10 @@ class AutoCommit {
 
 	async checkGitRepository() {
 		/**
-		 * 中文说明：校验当前工作目录是否位于 Git 仓库中。
-		 * - 成功：返回 true；
-		 * - 失败：抛出带中文提示的异常；
-		 * - 设计：不依赖 git 工作树状态，仅检查 .git 目录是否存在。
+		 * Description: Verify if the current working directory is inside a Git repository.
+		 * - Success: returns true;
+		 * - Failure: throws an exception with Chinese prompt;
+		 * - Design: does not rely on git worktree status, only checks if .git directory exists.
 		 */
 		try {
 			await execAsync("git rev-parse --git-dir");
@@ -348,10 +301,10 @@ class AutoCommit {
 
 	async getGitChanges() {
 		/**
-		 * 中文说明：并行收集 Git 变更信息，组装为文本片段以供提示词使用。
-		 * - 并行：status/branch/diff（staged/unstaged），必要时附加 --stat 汇总；
-		 * - 缓存：尽可能复用前序阶段的查询结果（如 branch/status）；
-		 * - 截断：控制返回文本大小，避免提示词过长导致生成耗时或失败。
+		 * Description: Collect Git change information in parallel and assemble it into text fragments for prompt use.
+		 * - Parallel: status/branch/diff (staged/unstaged), optionally appending --stat summary;
+		 * - Cache: Reuse query results from previous stages (e.g., branch/status) as much as possible;
+		 * - Truncation: Control return text size to avoid prompt being too long causing generation timeout or failure.
 		 */
 		try {
 			// 若有缓存则直接使用；否则并行执行相关命令以提升性能
@@ -459,11 +412,11 @@ class AutoCommit {
 
 	async generateCommitMessageWithClaude(changes) {
 		/**
-		 * 中文说明：调用 Claude Code SDK 生成提交信息。
-		 * - 输入：变更文本片段（由 getGitChanges() 产生）；
-		 * - 超时与重试：单次 30s 超时，最多 3 次（指数退避）；
-		 * - 返回：纯文本提交信息；
-		 * - 异常：在达到最大重试后抛出错误。
+		 * Description: Call Claude Code SDK to generate commit message.
+		 * - Input: Change text fragment (produced by getGitChanges());
+		 * - Timeout & Retry: Single 30s timeout, max 3 attempts (exponential backoff);
+		 * - Return: Plain text commit message;
+		 * - Exception: Throws error after reaching max retries.
 		 */
 		const prompt = this.buildPrompt(changes);
 
@@ -570,7 +523,7 @@ class AutoCommit {
 					);
 				}
 
-				// 指数バックオフで待機
+				// Exponential backoff wait
 				const delay = Math.min(1000 * Math.pow(2, attempt - 1), 10000);
 				console.log(`⏳ Retrying in ${delay}ms...`);
 				await new Promise((resolve) => setTimeout(resolve, delay));
@@ -658,11 +611,11 @@ class AutoCommit {
 
 	buildPrompt(changes) {
 		/**
-		 * 中文说明：优化后的提示词构造
-		 * - 统一约束：仅输出“提交信息本身”，不要代码块/引号/解释性文字；
-		 * - 结构：第一行为简短主题（<= 72 字符）；空一行；可选 1~3 行要点（每行以 "- " 开头）；
-		 * - 约定式提交：若启用则主题以 `<type>(可选scope): ` 开头；若指定 commitType 则固定使用；
-		 * - 表情：开启时可在主题或要点中酌情加入（不超过 2 个），不开启则不要添加；
+		 * Description: Optimized prompt construction
+		 * - Unified constraints: Output only "commit message itself", no code blocks/quotes/explanatory text;
+		 * - Structure: First line is short subject (<= 72 chars); empty line; optional 1~3 bullet points (each starts with "- ");
+		 * - Conventional Commits: If enabled, subject starts with `<type>(optional scope): `; if commitType is specified, use it fixedly;
+		 * - Emoji: If enabled, can be added to subject or bullet points (max 2), otherwise do not add;
 		 */
 		let base = "";
 		const cc = this.conventionalCommit;
@@ -679,15 +632,6 @@ class AutoCommit {
 				(cc ? `- 使用 Conventional Commits 格式；${ctype ? ` 主题类型固定为 \"${ctype}\"；` : ""}\n` : "") +
 				emojiHintZh +
 				"- 不要包含引用他人的说明、模型自我描述或无关文本。";
-		} else if (this.language === "ja") {
-			const emojiHintJa = this.useEmoji ? "- 必要に応じて絵文字を適度に（最大2つ）。\n" : "- 絵文字は使用しない。\n";
-			base =
-				"次のGit変更に基づいて日本語のコミットメッセージを作成してください。\n" +
-				"- 出力はコミットメッセージのみ（説明・引用・コードブロック不可）；\n" +
-				"- 1行目は短い要約（命令形、72文字以内）；空行；続けて1~3行の箇条書き（各行は \"- \" で開始、任意）；\n" +
-				(cc ? `- Conventional Commits形式を使用。${ctype ? ` タイプは \"${ctype}\" に固定。` : ""}\n` : "") +
-				emojiHintJa +
-				"- 不要な説明やメタ情報は含めない。";
 		} else {
 			const emojiHintEn = this.useEmoji ? "- If appropriate, include up to 2 emojis.\n" : "- Do not include emojis.\n";
 			base =
@@ -705,14 +649,14 @@ class AutoCommit {
 	}
 
     /**
-     * 检查是否可通过 `claude` 命令启动
-     * 仅做可执行性校验，不检查安装来源或详细配置。
+     * Check if `claude` command is executable
+     * Only checks executability, not installation source or detailed config.
      */
     async checkClaudeCommand() {
         /**
-         * 中文说明：解析并校验 `claude` 可执行程序路径。
-         * - 优先使用配置项 `claudePath`；否则通过 PATH 解析；
-         * - 成功：记录路径并返回 true；失败：抛出带中文提示的异常；
+         * Description: Parse and verify `claude` executable path.
+         * - Priority: Use config item `claudePath`; otherwise parse via PATH;
+         * - Success: Record path and return true; Failure: Throw exception with Chinese prompt;
          */
         try {
             // 若已通过配置指定了 claudePath，则优先使用并校验
@@ -778,7 +722,7 @@ class AutoCommit {
 
 	async createCommit(message) {
 		try {
-			// メッセージをエスケープ
+			// Escape message
 			const escapedMessage = message.replace(/"/g, '\\"').replace(/\$/g, "\\$");
 			await execAsync(`git commit -m "${escapedMessage}"`);
 			return true;
@@ -821,9 +765,9 @@ class AutoCommit {
 
     async run() {
 		/**
-		 * 中文说明：CLI 主执行流程。
-		 * 1) 预检（配置/Git/claude） 2) 变更检测与采集 3) 模板或 SDK 生成
-		 * 4) 根据模式提交/推送 5) 可选输出统计 6) 结构化日志收尾
+		 * Description: CLI Main Execution Flow.
+		 * 1) Pre-check (Config/Git/claude) 2) Change detection & collection 3) Template or SDK generation
+		 * 4) Commit/Push based on mode 5) Optional statistics 6) Structured log wrap-up
 		 */
 		const totalStart = this.verbose ? process.hrtime.bigint() : null;
 
@@ -890,7 +834,7 @@ class AutoCommit {
 				console.log(`🔍 Analyzing changes with ${engine}...`);
 			}
 
-			// テンプレート使用の場合
+			// If using template
 			let commitMessage;
 			if (this.templateName) {
 				try {
@@ -924,7 +868,7 @@ class AutoCommit {
 			if (this.dryRun) {
 				console.log("\n🔍 Dry run mode - commit not created");
 
-				// テンプレート保存オプション
+				// Template save option
 				if (process.argv.includes("--save-template")) {
 					const templateName =
 						process.argv[process.argv.indexOf("--save-template") + 1];
@@ -945,7 +889,7 @@ class AutoCommit {
 			if (this.verbose) {
 				await this.showStatistics();
 
-				// 総実行時間を表示
+				// Display total execution time
 				if (totalStart) {
 					const totalEnd = process.hrtime.bigint();
 					const totalDuration = Number(totalEnd - totalStart) / 1e6; // 毫秒
@@ -1045,7 +989,7 @@ AutoCommit (SDK 版本 ${CLI_VERSION}) / AutoCommit (SDK Version ${CLI_VERSION})
   auto-commit [options]
 
 选项 / Options:
-  -l, --language <lang>       提交信息语言（en, ja, zh） / Language for commit message (en, ja, zh)
+  -l, --language <lang>       提交信息语言（zh, en） / Language for commit message (zh, en)
   -e, --emoji                 在提交信息中包含表情 / Include emojis in commit message
   -c, --conventional          使用 Conventional Commits 规范 / Use Conventional Commits format
   -t, --type <type>           指定提交类型（feat, fix, docs 等）/ Specify commit type (feat, fix, docs, etc.)
@@ -1055,7 +999,7 @@ AutoCommit (SDK 版本 ${CLI_VERSION}) / AutoCommit (SDK Version ${CLI_VERSION})
   --template <name>           使用已保存模板 / Use saved template
   --save-template <name>      将生成的信息保存为模板（仅 dry-run）/ Save generated message as template (dry-run only)
   --list-templates            列出可用模板 / List available templates
-  --provider <claude|codex>   选择 AI 引擎（默认 claude）/ Select AI provider (default: claude)
+  --provider <claude|codex>   选择 AI 引擎（默认 codex）/ Select AI provider (default: codex)
   --codex                     快捷方式，等同于 --provider codex / Shortcut for --provider codex
   --claude                    快捷方式，等同于 --provider claude / Shortcut for --provider claude
   --codex-model <name>        指定 Codex 模型（可选） / Optional Codex model name
@@ -1064,8 +1008,8 @@ AutoCommit (SDK 版本 ${CLI_VERSION}) / AutoCommit (SDK Version ${CLI_VERSION})
 
 示例 / Examples:
   auto-commit
-  auto-commit -l ja -e -c
   auto-commit -l zh -e -c
+  auto-commit -l en -e -c
   auto-commit -t feat --push
   auto-commit --provider codex --push
   auto-commit --dry-run --save-template my-template
@@ -1073,10 +1017,11 @@ AutoCommit (SDK 版本 ${CLI_VERSION}) / AutoCommit (SDK Version ${CLI_VERSION})
 配置 / Configuration:
   路径 / Path: ~/.auto-commit/config.yml (YAML only)
   YAML 示例 / Example:
-  language: ja
+  language: zh
   useEmoji: true
-  conventionalCommit: true
-  verbose: false
+  conventionalCommit: false
+  provider: codex
+  verbose: true
         `);
 				process.exit(0);
 				break;

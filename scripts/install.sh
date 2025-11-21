@@ -186,8 +186,6 @@ npm install --production
 print_message "$YELLOW" "🔗 正在创建命令链接..."
 ln -sf "$INSTALL_DIR/bin/auto-commit" "$BIN_DIR/auto-commit"
 chmod +x "$BIN_DIR/auto-commit"
-ln -sf "$INSTALL_DIR/bin/claude-auto-commit" "$BIN_DIR/claude-auto-commit"
-chmod +x "$BIN_DIR/claude-auto-commit"
 
 # Create default config (YAML preferred); keep JSON for backward compatibility
 if [ ! -f "$CONFIG_DIR/config.yml" ]; then
@@ -195,8 +193,8 @@ if [ ! -f "$CONFIG_DIR/config.yml" ]; then
     cat > "$CONFIG_DIR/config.yml" << 'EOF'
 # AutoCommit 配置（YAML）
 # 说明：如同时存在 config.yml 与 config.json，将优先读取 YAML。
-language: zh               # en/ja/zh
-useEmoji: true            # 是否在提交消息中使用表情
+language: zh               # zh/en
+useEmoji: true             # 是否在提交消息中使用表情
 conventionalCommit: false  # 是否使用 Conventional Commits 格式
 provider: codex           # claude/codex
 verbose: true             # 是否启用详细输出
@@ -228,7 +226,7 @@ echo "      auto-commit -l zh -e -c"
 echo "      auto-commit --provider codex --push"
 echo ""
 echo "   3. 按需修改默认配置："
-echo "      编辑 ~/.auto-commit/config.yml（推荐），或继续沿用 ~/.claude-auto-commit/config.yml（兼容）"
+echo "      编辑 ~/.auto-commit/config.yml"
 echo ""
 
 # Check if bin directory is in PATH
